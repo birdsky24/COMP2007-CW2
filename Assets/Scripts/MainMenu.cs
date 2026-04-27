@@ -29,6 +29,7 @@ public class MainMenu : MonoBehaviour
 
     private IEnumerator LoadWithDelay2()
     {
+        Time.timeScale = 1f;
         yield return new WaitForSeconds(0.2f);
         SceneManager.LoadScene(0); // Loads main menu scene
     }

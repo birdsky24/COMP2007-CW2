@@ -11,6 +11,7 @@ public class InputManager : MonoBehaviour
     private PlayerMotor motor;
     private PlayerLook look;
     private PlacementMode placementMode;
+    private PauseMenu pauseMenu;
     // Start is called before the first frame update
     void Awake()
     {
@@ -20,12 +21,13 @@ public class InputManager : MonoBehaviour
         motor = GetComponent<PlayerMotor>();
         look = GetComponent<PlayerLook>();
         placementMode = GetComponent<PlacementMode>();
+        pauseMenu = FindObjectOfType<PauseMenu>();
 
         onFoot.Jump.performed += ctx => motor.Jump();
-
         onFoot.Crouch.performed += ctx => motor.Crouch();
         onFoot.Sprint.performed += ctx => motor.Sprint();
         onFoot.TogglePlacement.performed += ctx => placementMode.TogglePlacementMode();
+        onFoot.Menu.performed += ctx => pauseMenu.Toggle();
     }
 
     // Update is called once per frame
