@@ -14,3 +14,6 @@ https://pixabay.com/sound-effects/film-special-effects-click-buttons-ui-menu-sou
 
 Barrel Assets
 https://assetstore.unity.com/packages/3d/props/industrial/pbr-metal-barrels-pack-221309
+
+Zombie Asset
+https://assetstore.unity.com/packages/3d/characters/hungry-zombie-99750
