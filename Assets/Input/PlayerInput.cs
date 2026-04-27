@@ -98,6 +98,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Menu"",
+                    ""type"": ""Button"",
+                    ""id"": ""6e7a3e0b-0af2-4981-b751-76e5c8dd43af"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -362,6 +371,28 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Place"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0af0d37b-87d2-4332-ba63-5c8c761c715d"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""54d50b57-4768-48ec-ab49-ce0d78d7722b"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Menu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -896,6 +927,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_OnFoot_Interact = m_OnFoot.FindAction("Interact", throwIfNotFound: true);
         m_OnFoot_TogglePlacement = m_OnFoot.FindAction("TogglePlacement", throwIfNotFound: true);
         m_OnFoot_Place = m_OnFoot.FindAction("Place", throwIfNotFound: true);
+        m_OnFoot_Menu = m_OnFoot.FindAction("Menu", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -975,6 +1007,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_OnFoot_Interact;
     private readonly InputAction m_OnFoot_TogglePlacement;
     private readonly InputAction m_OnFoot_Place;
+    private readonly InputAction m_OnFoot_Menu;
     public struct OnFootActions
     {
         private @PlayerInput m_Wrapper;
@@ -987,6 +1020,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @Interact => m_Wrapper.m_OnFoot_Interact;
         public InputAction @TogglePlacement => m_Wrapper.m_OnFoot_TogglePlacement;
         public InputAction @Place => m_Wrapper.m_OnFoot_Place;
+        public InputAction @Menu => m_Wrapper.m_OnFoot_Menu;
         public InputActionMap Get() { return m_Wrapper.m_OnFoot; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1020,6 +1054,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Place.started -= m_Wrapper.m_OnFootActionsCallbackInterface.OnPlace;
                 @Place.performed -= m_Wrapper.m_OnFootActionsCallbackInterface.OnPlace;
                 @Place.canceled -= m_Wrapper.m_OnFootActionsCallbackInterface.OnPlace;
+                @Menu.started -= m_Wrapper.m_OnFootActionsCallbackInterface.OnMenu;
+                @Menu.performed -= m_Wrapper.m_OnFootActionsCallbackInterface.OnMenu;
+                @Menu.canceled -= m_Wrapper.m_OnFootActionsCallbackInterface.OnMenu;
             }
             m_Wrapper.m_OnFootActionsCallbackInterface = instance;
             if (instance != null)
@@ -1048,6 +1085,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Place.started += instance.OnPlace;
                 @Place.performed += instance.OnPlace;
                 @Place.canceled += instance.OnPlace;
+                @Menu.started += instance.OnMenu;
+                @Menu.performed += instance.OnMenu;
+                @Menu.canceled += instance.OnMenu;
             }
         }
     }
@@ -1167,6 +1207,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnInteract(InputAction.CallbackContext context);
         void OnTogglePlacement(InputAction.CallbackContext context);
         void OnPlace(InputAction.CallbackContext context);
+        void OnMenu(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
