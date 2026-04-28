@@ -17,3 +17,9 @@ https://assetstore.unity.com/packages/3d/props/industrial/pbr-metal-barrels-pack
 
 Zombie Asset
 https://assetstore.unity.com/packages/3d/characters/hungry-zombie-99750
+
+Zombie Roar
+https://pixabay.com/sound-effects/film-special-effects-zombie-screech-sound-effect-312865/
+
+Zombie Sounds
+https://assetstore.unity.com/packages/audio/sound-fx/zombie-massacre-sound-effects-starter-pack-345894
