@@ -9,16 +9,22 @@ public class Enemy : MonoBehaviour
     private NavMeshAgent agent;
     private GameObject player;
     private Animator animator;
+    private Vector3 lastKnowPos;
 
     public NavMeshAgent Agent { get => agent;  }
     public GameObject Player { get => player; }
     public Animator Animator { get => animator; }
+    public Vector3 LastKnowPos { get => lastKnowPos; set => lastKnowPos = value; }
 
     public Path path;
     public float sightDistance = 20f;
     public float fieldOfView = 85f;
     public float eyeHeight;
     public float attackDistance = 2f;
+    public float hearingRange = 10f;
+    public bool isAlerted = false;
+
+    private PlayerMotor playerMotor;
 
     //just for debugging purposes
     [SerializeField]
@@ -36,7 +42,23 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         CanSeePlayer();
+        CheckPlayerProximity();
         currentState = stateMachine.activeState.ToString();
+    }
+    private void CheckPlayerProximity()
+    {
+        if (player != null)
+        {
+            if (Vector3.Distance(transform.position, player.transform.position) < 3f && !playerMotor.crouching)
+            {
+                stateMachine.ChangeState(new AttackState());
+            }
+        }
+    }
+    public void AlertFromRoar()
+    {
+        isAlerted = true;
+        fieldOfView = 360f;
     }
     public bool CanSeePlayer()
     {

@@ -5,7 +5,7 @@ public class PlacementMode : MonoBehaviour
     private Camera cam;
     private InputManager inputManager;
 
-    [SerializeField] private GameObject placeableObjectPrefab;
+    [SerializeField] private GameObject[] placeableObjectPrefabs;
     [SerializeField] private GameObject previewObjectPrefab;
     [SerializeField] private LayerMask placementSurfaceMask;
     [SerializeField] private float distance = 3f;
@@ -52,7 +52,8 @@ public class PlacementMode : MonoBehaviour
 
     private void Place(Quaternion rotation)
     {
-        Instantiate(placeableObjectPrefab, _currentPlacementPosition, rotation);
+        GameObject randomPrefab = placeableObjectPrefabs[Random.Range(0, placeableObjectPrefabs.Length)];
+        Instantiate(randomPrefab, _currentPlacementPosition, rotation);
     }
 
     public void TogglePlacementMode()

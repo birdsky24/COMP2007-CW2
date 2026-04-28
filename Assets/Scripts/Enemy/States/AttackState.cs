@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class AttackState : BaseState
 {
-    private float moveTimer;
     private float losePlayerTimer;
     private float attackTimer;
     private bool hasRoared = false;
@@ -11,7 +10,7 @@ public class AttackState : BaseState
     public override void Enter()
     {
         playerHealth = GameObject.FindObjectOfType<HealthBarScript>();
-
+        enemy.fieldOfView = 180f;
         // roar first before chasing
         enemy.Animator.SetTrigger("roar");
         enemy.Agent.isStopped = true;       // stop moving during roar
@@ -20,6 +19,7 @@ public class AttackState : BaseState
 
     public override void Exit()
     {
+        enemy.fieldOfView = 85f;
         enemy.Animator.SetBool("run", false);
         enemy.Animator.SetBool("atack1", false);
         enemy.Agent.isStopped = false;
@@ -43,6 +43,14 @@ public class AttackState : BaseState
         if (enemy.CanSeePlayer())
         {
             losePlayerTimer = 0;
+
+            // Rotate toward player quickly
+            Vector3 direction = (enemy.Player.transform.position - enemy.transform.position).normalized;
+            direction.y = 0f; // keep rotation on Y axis only
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            enemy.transform.rotation = Quaternion.RotateTowards(
+                enemy.transform.rotation, targetRotation, 360f * Time.deltaTime); // 360 degrees per second
+
             float distanceToPlayer = Vector3.Distance(
                 enemy.transform.position, enemy.Player.transform.position);
 
@@ -68,7 +76,7 @@ public class AttackState : BaseState
             {
                 // chase player
                 enemy.Agent.isStopped = false;
-                enemy.Agent.speed = 12f;
+                enemy.Agent.speed = 14f;
                 enemy.Animator.SetBool("atack1", false);
                 enemy.Animator.SetBool("atack2", false);
                 enemy.Animator.SetBool("atack3", false);
@@ -76,13 +84,14 @@ public class AttackState : BaseState
                 enemy.Animator.SetBool("run", true);
                 enemy.Agent.SetDestination(enemy.Player.transform.position); // UPDATE EVERY FRAME
             }
+            enemy.LastKnowPos = enemy.Player.transform.position;
         }
         else
         {
             losePlayerTimer += Time.deltaTime;
             enemy.Animator.SetBool("run", false);
-            if (losePlayerTimer > 8)
-                stateMachine.ChangeState(new PatrolState());
+            if (losePlayerTimer > 3)
+                stateMachine.ChangeState(new SearchState());
         }
     }
 }

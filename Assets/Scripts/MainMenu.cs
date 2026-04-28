@@ -21,7 +21,6 @@ public class MainMenu : MonoBehaviour
         Application.Quit(); // Doesn't work in the editor because it could close unity and lose unsaved work
     }
 
-
     public void LoadMainMenu()
     {
         StartCoroutine(LoadWithDelay2());

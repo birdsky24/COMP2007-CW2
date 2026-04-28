@@ -13,13 +13,18 @@ public class PatrolState : BaseState
     public override void Perform()
     {
         PatrolCycle();
-        if (enemy.CanSeePlayer())
+        if (enemy.CanSeePlayer() || enemy.isAlerted)
+        {
+            enemy.isAlerted = false;
             stateMachine.ChangeState(new AttackState());
+        }
     }
 
     public override void Exit()
     {
         waitTimer = 0;
+        enemy.fieldOfView = 85f;
+        enemy.isAlerted = false;
         enemy.Animator.SetBool("walk", false);
         enemy.Animator.SetBool("idle2", false);
     }
