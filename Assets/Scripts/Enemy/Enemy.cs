@@ -23,8 +23,11 @@ public class Enemy : MonoBehaviour
     public float attackDistance = 2f;
     public float hearingRange = 10f;
     public bool isAlerted = false;
+    public int maxHealth = 100;
+    public int currHealth;
 
     private PlayerMotor playerMotor;
+    private EnemySounds enemySounds;
 
     //just for debugging purposes
     [SerializeField]
@@ -34,20 +37,47 @@ public class Enemy : MonoBehaviour
         stateMachine = GetComponent<StateMachine>();
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+        enemySounds = GetComponent<EnemySounds>();
         stateMachine.Initialise();
+        currHealth = maxHealth;
         player = GameObject.FindGameObjectWithTag("Player");
+        playerMotor = player.GetComponent<PlayerMotor>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (currHealth <= 0) return;
+
         CanSeePlayer();
         CheckPlayerProximity();
         currentState = stateMachine.activeState.ToString();
     }
+    public void TakeDamage(int damage)
+    {
+        if (currHealth <= 0) return;
+
+        currHealth -= damage;
+
+        if (!(stateMachine.activeState is AttackState))  // only change if not already attacking
+            stateMachine.ChangeState(new AttackState());
+
+        if (currHealth <= 0)
+        {
+            Die();
+            return;
+        } 
+    }
+
+    private void Die()
+    {
+        stateMachine.ChangeState(new DeathState());
+    }
+
     private void CheckPlayerProximity()
     {
         if (player == null || playerMotor == null) return;
+        if (currHealth <= 0) return;
 
         if (Vector3.Distance(transform.position, player.transform.position) < 3f
             && !playerMotor.crouching

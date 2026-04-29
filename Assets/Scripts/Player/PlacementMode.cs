@@ -14,6 +14,7 @@ public class PlacementMode : MonoBehaviour
     private Vector3 _currentPlacementPosition = Vector3.zero;
     private BarrelCounter counter;
     private PreviewObject _previewObjectComponent = null;
+    private BarrelHitbox barrelHitbox;
 
     public bool isActive { get; private set; }
 
@@ -22,6 +23,7 @@ public class PlacementMode : MonoBehaviour
         cam = GetComponent<PlayerLook>().cam;
         inputManager = GetComponent<InputManager>();
         counter = FindObjectOfType<BarrelCounter>();
+        barrelHitbox = FindObjectOfType<BarrelHitbox>();
     }
 
     void Update()
@@ -52,12 +54,20 @@ public class PlacementMode : MonoBehaviour
 
     private void Place(Quaternion rotation)
     {
-        GameObject randomPrefab = placeableObjectPrefabs[Random.Range(0, placeableObjectPrefabs.Length)];
-        Instantiate(randomPrefab, _currentPlacementPosition, rotation);
+        Instantiate(placeableObjectPrefabs[Random.Range(0, placeableObjectPrefabs.Length)],
+            _currentPlacementPosition, rotation);
+
+        // reset durability since a new barrel is now held
+        BarrelHitbox barrelHitbox = FindObjectOfType<BarrelHitbox>();
+        if (barrelHitbox != null)
+            barrelHitbox.ResetDurability();
     }
 
     public void TogglePlacementMode()
     {
+        if (!isActive && barrelHitbox != null && barrelHitbox.IsSwinging)
+            return;
+
         isActive = !isActive;
 
         if (isActive)

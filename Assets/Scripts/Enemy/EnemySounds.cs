@@ -15,11 +15,14 @@ public class EnemySounds : MonoBehaviour
     [SerializeField] private AudioClip atack4Sound;
     [SerializeField] private AudioClip atack45Sound;
     [SerializeField] private AudioClip idle2Sound;
+    [SerializeField] private AudioClip deathSound;
     private HealthBarScript playerHealth;
     private GameObject player;
+    private Enemy enemy;
 
     void Start()
     {
+        enemy = GetComponent<Enemy>();
         playerHealth = FindObjectOfType<HealthBarScript>();
         player = GameObject.FindGameObjectWithTag("Player");
     }
@@ -35,6 +38,17 @@ public class EnemySounds : MonoBehaviour
         PlaySound(walkSound);
     }
 
+    public void PlayDeathSound()
+    {
+        audioSource.Stop();                     // stop all regular sounds
+        roarAudioSource.Stop();                 // stop roar sound
+        if (deathSound != null)
+        {
+            audioSource.pitch = Random.Range(0.9f, 1.1f);
+            audioSource.PlayOneShot(deathSound);
+        }
+    }
+
     public void PlayRunSound()
     {
         PlaySound(runSound);
@@ -42,6 +56,8 @@ public class EnemySounds : MonoBehaviour
 
     public void DealDamage()
     {
+        if (enemy == null || enemy.currHealth <= 0) return;
+
         if (player == null || playerHealth == null) return;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
