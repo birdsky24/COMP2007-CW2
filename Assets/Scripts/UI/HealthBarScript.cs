@@ -12,13 +12,14 @@ public class HealthBarScript : MonoBehaviour
     public int maxHealth; // maximum health
     public int currHealth; // current health
 
-    private PauseMenu pauseMenu;
+    private DeathScreen deathScreen;
+    private bool isDead = false;
 
     // start is called before the first frame update
     void Start()
     {
         currHealth = maxHealth; // set the current health to max health
-        pauseMenu = FindObjectOfType<PauseMenu>(true);
+        deathScreen = FindObjectOfType<DeathScreen>(true);
     }
 
     // Update is called once per frame
@@ -34,14 +35,10 @@ public class HealthBarScript : MonoBehaviour
         healthBarSlider.value = currHealth;
         healthBarSlider.maxValue = maxHealth;
 
-        // On button press take damage
-        //if (Input.GetKeyDown(KeyCode.G)) {TakeDamage();}
-        // On button press add health
-        //if (Input.GetKeyDown(KeyCode.H)) {AddHealth();}
-
-        if (currHealth <= 0)
+        if (currHealth <= 0 && !isDead)
         {
-            pauseMenu.ShowDeathScreen();
+            isDead = true;
+            deathScreen.Show();
         }
     }
 

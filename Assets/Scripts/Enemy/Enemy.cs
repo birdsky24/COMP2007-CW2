@@ -47,12 +47,13 @@ public class Enemy : MonoBehaviour
     }
     private void CheckPlayerProximity()
     {
-        if (player != null)
+        if (player == null || playerMotor == null) return;
+
+        if (Vector3.Distance(transform.position, player.transform.position) < 3f
+            && !playerMotor.crouching
+            && !(stateMachine.activeState is AttackState))  // ADD THIS: don't trigger if already attacking
         {
-            if (Vector3.Distance(transform.position, player.transform.position) < 3f && !playerMotor.crouching)
-            {
-                stateMachine.ChangeState(new AttackState());
-            }
+            stateMachine.ChangeState(new AttackState());
         }
     }
     public void AlertFromRoar()

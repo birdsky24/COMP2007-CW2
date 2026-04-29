@@ -18,6 +18,11 @@ public class PatrolState : BaseState
             enemy.isAlerted = false;
             stateMachine.ChangeState(new AttackState());
         }
+        if (Vector3.Distance(enemy.transform.position, enemy.Player.transform.position) < 3f
+        && !enemy.Player.GetComponent<PlayerMotor>().crouching)
+        {
+            stateMachine.ChangeState(new AttackState());
+        }
     }
 
     public override void Exit()
