@@ -15,6 +15,8 @@ public class HealthBarScript : MonoBehaviour
     private DeathScreen deathScreen;
     private bool isDead = false;
 
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip hitSound;
     // start is called before the first frame update
     void Start()
     {
@@ -42,15 +44,36 @@ public class HealthBarScript : MonoBehaviour
         }
     }
 
-    // Take 25 damage
+    private void PlaySound(AudioClip clip)
+    {
+        audioSource.pitch = Random.Range(0.8f, 1.2f);  // slight pitch variation
+        audioSource.PlayOneShot(clip);
+    }
+
+    // Take 20 damage
     public void TakeDamage()
     {
         currHealth -= 20;
+        PlaySound(hitSound);
     }
 
-    // Heal 25 health
+    // Take 40 damage
+    public void TakeDamage40()
+    {
+        currHealth -= 40;
+        PlaySound(hitSound);
+    }
+
+    // Take 60 damage
+    public void TakeDamage60()
+    {
+        currHealth -= 60;
+        PlaySound(hitSound);
+    }
+
+    // Heal 30 health
     public void AddHealth()
     {
-        currHealth += 20;
+        currHealth += 30;
     }
 }

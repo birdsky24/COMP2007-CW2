@@ -1133,6 +1133,13 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0.45890412
+        functionName: DealDamage40
+        data: 
+        objectReferenceParameter: {fileID: 8300000, guid: ffa0c8a696cdd0e4493de637049e456d, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

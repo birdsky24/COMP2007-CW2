@@ -15,10 +15,18 @@ public class EnemySounds : MonoBehaviour
     [SerializeField] private AudioClip atack4Sound;
     [SerializeField] private AudioClip atack45Sound;
     [SerializeField] private AudioClip idle2Sound;
+    private HealthBarScript playerHealth;
+    private GameObject player;
+
+    void Start()
+    {
+        playerHealth = FindObjectOfType<HealthBarScript>();
+        player = GameObject.FindGameObjectWithTag("Player");
+    }
 
     private void PlaySound(AudioClip clip)
     {
-        audioSource.pitch = Random.Range(0.9f, 1.1f);  // slight pitch variation
+        audioSource.pitch = Random.Range(0.8f, 1.2f);  // slight pitch variation
         audioSource.PlayOneShot(clip);
     }
 
@@ -30,6 +38,39 @@ public class EnemySounds : MonoBehaviour
     public void PlayRunSound()
     {
         PlaySound(runSound);
+    }
+
+    public void DealDamage()
+    {
+        if (player == null || playerHealth == null) return;
+
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+        Debug.Log("Distance to player: " + distanceToPlayer);  // ADD temporarily to check distance
+
+        if (distanceToPlayer <= 2f)
+            playerHealth.TakeDamage();
+    }
+
+    public void DealDamage40()
+    {
+        if (player == null || playerHealth == null) return;
+
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+        Debug.Log("Distance to player: " + distanceToPlayer);  // ADD temporarily to check distance
+
+        if (distanceToPlayer <= 1.5f)
+            playerHealth.TakeDamage40();
+    }
+
+    public void DealDamage60()
+    {
+        if (player == null || playerHealth == null) return;
+
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+        Debug.Log("Distance to player: " + distanceToPlayer);  // ADD temporarily to check distance
+
+        if (distanceToPlayer <= 3f)
+            playerHealth.TakeDamage60();
     }
 
     public void roar()
