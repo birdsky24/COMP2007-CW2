@@ -9,6 +9,7 @@ public class AttackState : BaseState
     {
         playerHealth = GameObject.FindObjectOfType<HealthBarScript>();
         enemy.fieldOfView = 180f;
+        enemy.Agent.updateRotation = false;
         enemy.Animator.SetTrigger("roar");
         enemy.Agent.isStopped = true;
         hasRoared = false;
@@ -17,6 +18,7 @@ public class AttackState : BaseState
     public override void Exit()
     {
         enemy.fieldOfView = 85f;
+        enemy.Agent.updateRotation = true;
         enemy.Animator.SetBool("run", false);
         enemy.Animator.SetBool("atack1", false);
         enemy.Animator.SetBool("atack2", false);

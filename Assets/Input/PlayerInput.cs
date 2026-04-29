@@ -107,6 +107,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""da34b93b-ed9c-41db-9592-dadedbd94c87"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -393,6 +402,28 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""260db940-a1f0-4aae-bafb-cb427cdc7e42"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3b48d115-a0f8-4245-b875-d90cb3a476e3"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -928,6 +959,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_OnFoot_TogglePlacement = m_OnFoot.FindAction("TogglePlacement", throwIfNotFound: true);
         m_OnFoot_Place = m_OnFoot.FindAction("Place", throwIfNotFound: true);
         m_OnFoot_Menu = m_OnFoot.FindAction("Menu", throwIfNotFound: true);
+        m_OnFoot_Attack = m_OnFoot.FindAction("Attack", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1008,6 +1040,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_OnFoot_TogglePlacement;
     private readonly InputAction m_OnFoot_Place;
     private readonly InputAction m_OnFoot_Menu;
+    private readonly InputAction m_OnFoot_Attack;
     public struct OnFootActions
     {
         private @PlayerInput m_Wrapper;
@@ -1021,6 +1054,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @TogglePlacement => m_Wrapper.m_OnFoot_TogglePlacement;
         public InputAction @Place => m_Wrapper.m_OnFoot_Place;
         public InputAction @Menu => m_Wrapper.m_OnFoot_Menu;
+        public InputAction @Attack => m_Wrapper.m_OnFoot_Attack;
         public InputActionMap Get() { return m_Wrapper.m_OnFoot; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1057,6 +1091,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Menu.started -= m_Wrapper.m_OnFootActionsCallbackInterface.OnMenu;
                 @Menu.performed -= m_Wrapper.m_OnFootActionsCallbackInterface.OnMenu;
                 @Menu.canceled -= m_Wrapper.m_OnFootActionsCallbackInterface.OnMenu;
+                @Attack.started -= m_Wrapper.m_OnFootActionsCallbackInterface.OnAttack;
+                @Attack.performed -= m_Wrapper.m_OnFootActionsCallbackInterface.OnAttack;
+                @Attack.canceled -= m_Wrapper.m_OnFootActionsCallbackInterface.OnAttack;
             }
             m_Wrapper.m_OnFootActionsCallbackInterface = instance;
             if (instance != null)
@@ -1088,6 +1125,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Menu.started += instance.OnMenu;
                 @Menu.performed += instance.OnMenu;
                 @Menu.canceled += instance.OnMenu;
+                @Attack.started += instance.OnAttack;
+                @Attack.performed += instance.OnAttack;
+                @Attack.canceled += instance.OnAttack;
             }
         }
     }
@@ -1208,6 +1248,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnTogglePlacement(InputAction.CallbackContext context);
         void OnPlace(InputAction.CallbackContext context);
         void OnMenu(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

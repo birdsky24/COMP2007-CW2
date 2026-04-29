@@ -45,7 +45,7 @@ public class EnemySounds : MonoBehaviour
         if (player == null || playerHealth == null) return;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-        Debug.Log("Distance to player: " + distanceToPlayer);  // ADD temporarily to check distance
+        //Debug.Log("Distance to player: " + distanceToPlayer);
 
         if (distanceToPlayer <= 2f)
             playerHealth.TakeDamage();
@@ -56,7 +56,6 @@ public class EnemySounds : MonoBehaviour
         if (player == null || playerHealth == null) return;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-        Debug.Log("Distance to player: " + distanceToPlayer);  // ADD temporarily to check distance
 
         if (distanceToPlayer <= 1.5f)
             playerHealth.TakeDamage40();
@@ -67,7 +66,7 @@ public class EnemySounds : MonoBehaviour
         if (player == null || playerHealth == null) return;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-        Debug.Log("Distance to player: " + distanceToPlayer);  // ADD temporarily to check distance
+       
 
         if (distanceToPlayer <= 3f)
             playerHealth.TakeDamage60();

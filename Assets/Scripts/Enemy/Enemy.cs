@@ -58,27 +58,41 @@ public class Enemy : MonoBehaviour
     }
     public void AlertFromRoar()
     {
+        if (stateMachine.activeState is AttackState) return;
         isAlerted = true;
         fieldOfView = 360f;
     }
     public bool CanSeePlayer()
     {
-        if(player != null)
+        if (player != null)
         {
-            //is the player close enough to be seen?
-            if(Vector3.Distance(transform.position,player.transform.position) < sightDistance)
+            if (Vector3.Distance(transform.position, player.transform.position) < sightDistance)
             {
                 Vector3 targetDirection = player.transform.position - transform.position - (Vector3.up * eyeHeight);
                 float angleToPlayer = Vector3.Angle(targetDirection, transform.forward);
-                if(angleToPlayer >= -fieldOfView && angleToPlayer <= fieldOfView)
+                if (angleToPlayer >= -fieldOfView && angleToPlayer <= fieldOfView)
                 {
                     Ray ray = new Ray(transform.position + (Vector3.up * eyeHeight), targetDirection);
-                    RaycastHit hitinfo = new RaycastHit();
-                    if(Physics.Raycast(ray,out hitinfo, sightDistance))
+                    RaycastHit hitinfo;
+                    if (Physics.Raycast(ray, out hitinfo, sightDistance))
                     {
-                        if(hitinfo.transform.gameObject == player)
+                        if (hitinfo.transform.gameObject == player)
                         {
+                            // player is directly visible
+                            if (stateMachine.activeState is AttackState)
+                                return true;
+
+                            // in patrol or search — check if player is crouching
+                            PlayerMotor playerMotor = player.GetComponent<PlayerMotor>();
+                            if (playerMotor != null && playerMotor.crouching)
+                                return false;   // can't see crouching player in non-attack states
+
                             return true;
+                        }
+                        else
+                        {
+                            // raycast hit something else (e.g. a barrel) before reaching player
+                            return false;       // line of sight blocked
                         }
                     }
                     Debug.DrawRay(ray.origin, ray.direction * sightDistance);
