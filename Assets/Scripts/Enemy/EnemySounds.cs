@@ -73,7 +73,7 @@ public class EnemySounds : MonoBehaviour
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
-        if (distanceToPlayer <= 1.5f)
+        if (distanceToPlayer <= 2f)
             playerHealth.TakeDamage40();
     }
 

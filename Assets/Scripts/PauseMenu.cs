@@ -6,6 +6,7 @@ public class PauseMenu : MonoBehaviour
 {
     private bool isPaused = false;
     private SettingsMenu settingsMenu;
+    private GameTimer gameTimer;
 
     void Awake()
     {
@@ -16,6 +17,7 @@ public class PauseMenu : MonoBehaviour
     {
         gameObject.SetActive(false);
         settingsMenu = FindObjectOfType<SettingsMenu>(true);
+        gameTimer = FindObjectOfType<GameTimer>();
     }
 
     public void OpenSettings()
@@ -38,6 +40,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         isPaused = false;
+        gameTimer?.Resume();
     }
 
     private void Pause()
@@ -47,6 +50,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         isPaused = true;
+        gameTimer?.Pause();
     }
 
     public void Restart()

@@ -29,6 +29,8 @@ public class Enemy : MonoBehaviour
     private PaintSplatter paintSplatter;
     private Transform pickupsParent;
 
+    private ZombieCounter zombieCounter;
+
     private PlayerMotor playerMotor;
     private EnemySounds enemySounds;
 
@@ -52,6 +54,7 @@ public class Enemy : MonoBehaviour
             pickupsParent = pickupsObject.transform;
         else
             pickupsParent = new GameObject("Pickups").transform;
+        zombieCounter = FindObjectOfType<ZombieCounter>();
     }
 
     // Update is called once per frame
@@ -84,6 +87,8 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
+        if (zombieCounter != null)
+            zombieCounter.OnZombieDied();
         if (paintSplatter != null)
             paintSplatter.SplatterOnDeath(transform.position);
         stateMachine.ChangeState(new DeathState());

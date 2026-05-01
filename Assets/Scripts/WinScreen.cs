@@ -1,48 +1,34 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Collections;
 
-public class DeathScreen : MonoBehaviour
+public class WinScreen : MonoBehaviour
 {
-    private SettingsMenu settingsMenu;
+    [SerializeField] private TextMeshProUGUI resultText;
     private GameTimer gameTimer;
     private ZombieCounter zombieCounter;
-
-    [SerializeField] private TextMeshProUGUI statsText;
+    private SettingsMenu settingsMenu;
 
     void Awake()
     {
-        Time.timeScale = 1f;
+        gameObject.SetActive(false);
     }
 
     void Start()
     {
-        gameObject.SetActive(false);
-        settingsMenu = FindObjectOfType<SettingsMenu>(true);
         zombieCounter = FindObjectOfType<ZombieCounter>();
         gameTimer = FindObjectOfType<GameTimer>();
     }
 
-    public void Show()
+    public void Show(int zombiesKilled, string time)
     {
         gameObject.SetActive(true);
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        resultText.text = "SUCCESS\n" + "You killed " + zombiesKilled + "\n" + " zombies in\n" + time + "!";
         GameUI.Instance?.HideHUD();
-        
-        if (statsText != null)
-            statsText.text = "FAILURE\n" + 
-                             "Zombies killed: " + zombieCounter.TotalKilled + "\n" +
-                             "Zombies remaining: " + zombieCounter.ZombiesRemaining + "\n" +
-                             "Time survived: " + gameTimer.GetFormattedTime();
-    }
-
-    public void OpenSettings()
-    {
-        gameObject.SetActive(false);
-        settingsMenu.Show(gameObject);
     }
 
     public void RestartScene()
@@ -56,6 +42,12 @@ public class DeathScreen : MonoBehaviour
         Application.Quit(); // Doesn't work in the editor because it could close unity and lose unsaved work
     }
 
+    public void OpenSettings()
+    {
+        gameObject.SetActive(false);
+        settingsMenu.Show(gameObject);
+    }
+
     public void GoToMainMenu()
     {
         Time.timeScale = 1f;
@@ -64,7 +56,7 @@ public class DeathScreen : MonoBehaviour
 
     private IEnumerator LoadMainMenuDelay()
     {
-        yield return new WaitForSecondsRealtime(0.2f);  // use realtime since timescale may be 0
+        yield return new WaitForSecondsRealtime(0.2f);
         SceneManager.LoadScene(0);
     }
 }
