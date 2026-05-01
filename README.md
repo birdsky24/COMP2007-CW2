@@ -23,3 +23,7 @@ https://pixabay.com/sound-effects/film-special-effects-zombie-screech-sound-effe
 
 Zombie Sounds
 https://assetstore.unity.com/packages/audio/sound-fx/zombie-massacre-sound-effects-starter-pack-345894
+
+Metal sound effects
+https://pixabay.com/sound-effects/film-special-effects-metal-pipe-357573/
+https://pixabay.com/sound-effects/film-special-effects-groaning-metal-511322/
