@@ -44,4 +44,22 @@ public class GameUI : MonoBehaviour
         promptTextUI.SetActive(true);
         cooldownUI.SetActive(true);
     }
+
+    public void HidePartHUD()
+    {
+        barrelCountUI.SetActive(false);
+        placementBarrelCountUI.SetActive(false);
+        durabilityUI.SetActive(false);
+        crosshairUI.SetActive(false);
+        promptTextUI.SetActive(false);
+    }
+
+    public void ShowPartHUD()
+    {
+        barrelCountUI.SetActive(true);
+        placementBarrelCountUI.SetActive(true);
+        durabilityUI.SetActive(true);
+        crosshairUI.SetActive(true);
+        promptTextUI.SetActive(true);
+    }
 }

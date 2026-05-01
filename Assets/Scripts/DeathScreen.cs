@@ -10,6 +10,7 @@ public class DeathScreen : MonoBehaviour
     private ZombieCounter zombieCounter;
 
     [SerializeField] private TextMeshProUGUI statsText;
+    [SerializeField] private TextMeshProUGUI leaderboardText;
 
     void Awake()
     {
@@ -37,12 +38,27 @@ public class DeathScreen : MonoBehaviour
                              "Zombies killed: " + zombieCounter.TotalKilled + "\n" +
                              "Zombies remaining: " + zombieCounter.ZombiesRemaining + "\n" +
                              "Time survived: " + gameTimer.GetFormattedTime();
+
+        if (leaderboardText != null)
+            leaderboardText.text = GetLeaderboard();
+    }
+
+    private string GetLeaderboard()
+    {
+        Leaderboard lb = Leaderboard.Instance ?? FindObjectOfType<Leaderboard>(true);
+        return lb != null ? lb.GetLeaderboardDisplay() : "LEADERBOARD\n\nNo entries yet";
     }
 
     public void OpenSettings()
     {
         gameObject.SetActive(false);
         settingsMenu.Show(gameObject);
+    }
+
+    public void UpdateLeaderboard(string display)
+    {
+        if (leaderboardText != null)
+            leaderboardText.text = display;
     }
 
     public void RestartScene()

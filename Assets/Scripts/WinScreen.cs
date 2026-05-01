@@ -21,6 +21,7 @@ public class WinScreen : MonoBehaviour
         zombieCounter = FindObjectOfType<ZombieCounter>();
         gameTimer = FindObjectOfType<GameTimer>();
         leaderboard = FindObjectOfType<Leaderboard>(true);
+        settingsMenu = FindObjectOfType<SettingsMenu>(true);
     }
 
     public void Show(int zombiesKilled, string time)

@@ -49,6 +49,22 @@ public class Leaderboard : MonoBehaviour
             nameInputField.onValueChanged.AddListener(ForceUppercase);
     }
 
+    public string GetLeaderboardDisplay()
+    {
+        if (data.entries.Count == 0)
+            return "LEADERBOARD\n\nNo entries yet";
+
+        string display = "LEADERBOARD\n\n";
+        for (int i = 0; i < data.entries.Count; i++)
+        {
+            LeaderboardEntry entry = data.entries[i];
+            display += (i + 1) + ". " + entry.playerName +
+                       "  " + entry.time +
+                       "  " + entry.zombiesKilled + " kills\n";
+        }
+        return display;
+    }
+
     private void ForceUppercase(string value)
     {
         nameInputField.SetTextWithoutNotify(value.ToUpper()); // ADD THIS: update without triggering listener again
@@ -108,6 +124,8 @@ public class Leaderboard : MonoBehaviour
 
         if (confirmButton != null)
             confirmButton.interactable = false;
+
+        UpdateAllLeaderboardDisplays();
     }
 
     private void AddEntry(string playerName, string formattedTime, int zombiesKilled, float rawTime)
@@ -149,6 +167,19 @@ public class Leaderboard : MonoBehaviour
                        "  " + entry.zombiesKilled + " kills\n";
         }
         leaderboardText.text = display;
+    }
+
+    private void UpdateAllLeaderboardDisplays()
+    {
+        // update any leaderboard text in pause and death screens
+        PauseMenu pauseMenu = FindObjectOfType<PauseMenu>(true);
+        DeathScreen deathScreen = FindObjectOfType<DeathScreen>(true);
+
+        if (pauseMenu != null)
+            pauseMenu.UpdateLeaderboard(GetLeaderboardDisplay());
+
+        if (deathScreen != null)
+            deathScreen.UpdateLeaderboard(GetLeaderboardDisplay());
     }
 
     private void SaveLeaderboard()

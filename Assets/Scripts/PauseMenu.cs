@@ -1,12 +1,14 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class PauseMenu : MonoBehaviour
 {
     private bool isPaused = false;
     private SettingsMenu settingsMenu;
     private GameTimer gameTimer;
+    [SerializeField] private TextMeshProUGUI leaderboardText;
 
     void Awake()
     {
@@ -43,6 +45,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = false;
         isPaused = false;
         gameTimer?.Resume();
+        GameUI.Instance?.ShowPartHUD();
     }
 
     private void Pause()
@@ -53,6 +56,22 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = true;
         isPaused = true;
         gameTimer?.Pause();
+        GameUI.Instance?.HidePartHUD();
+
+        if (leaderboardText != null)
+            leaderboardText.text = GetLeaderboard();
+    }
+
+    private string GetLeaderboard()
+    {
+        Leaderboard lb = Leaderboard.Instance ?? FindObjectOfType<Leaderboard>(true);
+        return lb != null ? lb.GetLeaderboardDisplay() : "LEADERBOARD\n\nNo entries yet";
+    }
+
+    public void UpdateLeaderboard(string display)
+    {
+        if (leaderboardText != null)
+            leaderboardText.text = display;
     }
 
     public void Restart()
