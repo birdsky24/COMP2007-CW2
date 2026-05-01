@@ -8,6 +8,7 @@ public class MainMenu : MonoBehaviour
     void Awake()
     {
         Time.timeScale = 1f;
+        AudioListener.volume = PlayerPrefs.GetFloat("Volume", 1f); // ADD THIS: load saved volume
     }
     public void PlayGame()
     {

@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using TMPro;
 
 public class SettingsMenu : MonoBehaviour
 {
     private GameObject previousScreen;
     [SerializeField] private TextMeshProUGUI controlsText;
+    [SerializeField] private Slider volumeSlider;
 
     void Awake()
     {
@@ -16,6 +18,22 @@ public class SettingsMenu : MonoBehaviour
     {
         if (controlsText != null)
             controlsText.text = GetControlsText();
+
+        if (volumeSlider != null)
+        {
+            volumeSlider.minValue = 0f;
+            volumeSlider.maxValue = 1f;
+            volumeSlider.value = PlayerPrefs.GetFloat("Volume", 1f); // load saved volume
+            volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
+            AudioListener.volume = volumeSlider.value;      // apply on start
+        }
+    }
+
+    private void OnVolumeChanged(float value)
+    {
+        AudioListener.volume = value;                       // affects all audio in scene
+        PlayerPrefs.SetFloat("Volume", value);              // save setting
+        PlayerPrefs.Save();
     }
 
     void Update()
