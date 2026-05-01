@@ -25,6 +25,7 @@ public class Enemy : MonoBehaviour
     public bool isAlerted = false;
     public int maxHealth = 100;
     public int currHealth;
+    [SerializeField] private GameObject[] barrelDropPrefabs;
 
     private PlayerMotor playerMotor;
     private EnemySounds enemySounds;
@@ -72,6 +73,22 @@ public class Enemy : MonoBehaviour
     private void Die()
     {
         stateMachine.ChangeState(new DeathState());
+        DropBarrel();
+    }
+
+    private void DropBarrel()
+    {
+        if (barrelDropPrefabs.Length == 0) return;
+
+        if (Random.value <= 0.4f)               // 40% chance
+        {
+            GameObject randomBarrel = barrelDropPrefabs[Random.Range(0, barrelDropPrefabs.Length)];
+            Vector3 spawnPosition = new Vector3(
+                transform.position.x,
+                transform.position.y - 0.3f,    // 0.8 above ground
+                transform.position.z);
+            Instantiate(randomBarrel, spawnPosition, Quaternion.identity);
+        }
     }
 
     private void CheckPlayerProximity()

@@ -56,11 +56,6 @@ public class PlacementMode : MonoBehaviour
     {
         Instantiate(placeableObjectPrefabs[Random.Range(0, placeableObjectPrefabs.Length)],
             _currentPlacementPosition, rotation);
-
-        // reset durability since a new barrel is now held
-        BarrelHitbox barrelHitbox = FindObjectOfType<BarrelHitbox>();
-        if (barrelHitbox != null)
-            barrelHitbox.ResetDurability();
     }
 
     public void TogglePlacementMode()

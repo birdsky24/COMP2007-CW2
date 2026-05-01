@@ -121,17 +121,9 @@ public class BarrelHitbox : MonoBehaviour
         BarrelCounter counter = GetBarrelCounter();
 
         if (counter != null && counter.Count > 0)
-        {
-            counter.Decrement();
-            durability = 5;
-            isBroken = false;
-            heldBarrel.SetActive(true);
-            counter.UpdateDurabilityDisplay(durability);       // reset durability display
-        }
+            counter.Decrement();                // SyncAll inside Decrement handles everything
         else
-        {
             HideBarrel();
-        }
     }
 
     private void PlaySound(AudioClip clip)
