@@ -26,6 +26,8 @@ public class Enemy : MonoBehaviour
     public int maxHealth = 100;
     public int currHealth;
     [SerializeField] private GameObject[] barrelDropPrefabs;
+    private PaintSplatter paintSplatter;
+    private Transform pickupsParent;
 
     private PlayerMotor playerMotor;
     private EnemySounds enemySounds;
@@ -35,6 +37,7 @@ public class Enemy : MonoBehaviour
     private string currentState;
     void Start()
     {
+        paintSplatter = GetComponent<PaintSplatter>();
         stateMachine = GetComponent<StateMachine>();
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
@@ -43,6 +46,12 @@ public class Enemy : MonoBehaviour
         currHealth = maxHealth;
         player = GameObject.FindGameObjectWithTag("Player");
         playerMotor = player.GetComponent<PlayerMotor>();
+
+        GameObject pickupsObject = GameObject.Find("Pickups");
+        if (pickupsObject != null)
+            pickupsParent = pickupsObject.transform;
+        else
+            pickupsParent = new GameObject("Pickups").transform;
     }
 
     // Update is called once per frame
@@ -60,6 +69,9 @@ public class Enemy : MonoBehaviour
 
         currHealth -= damage;
 
+        if (paintSplatter != null)
+            paintSplatter.SplatterOnHit(transform.position);
+
         if (!(stateMachine.activeState is AttackState))  // only change if not already attacking
             stateMachine.ChangeState(new AttackState());
 
@@ -72,6 +84,8 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
+        if (paintSplatter != null)
+            paintSplatter.SplatterOnDeath(transform.position);
         stateMachine.ChangeState(new DeathState());
         DropBarrel();
     }
@@ -80,14 +94,15 @@ public class Enemy : MonoBehaviour
     {
         if (barrelDropPrefabs.Length == 0) return;
 
-        if (Random.value <= 0.4f)               // 40% chance
+        if (Random.value <= 0.4f)
         {
             GameObject randomBarrel = barrelDropPrefabs[Random.Range(0, barrelDropPrefabs.Length)];
             Vector3 spawnPosition = new Vector3(
                 transform.position.x,
-                transform.position.y - 0.3f,    // 0.8 above ground
+                transform.position.y - 0.3f,
                 transform.position.z);
-            Instantiate(randomBarrel, spawnPosition, Quaternion.identity);
+            GameObject pickup = Instantiate(randomBarrel, spawnPosition, Quaternion.identity);
+            pickup.transform.SetParent(pickupsParent);
         }
     }
 
