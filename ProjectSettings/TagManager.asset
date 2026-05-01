@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Barrel
   - HeldItem
+  - Floor
   layers:
   - Default
   - TransparentFX

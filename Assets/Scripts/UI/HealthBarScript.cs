@@ -51,9 +51,9 @@ public class HealthBarScript : MonoBehaviour
     }
 
     // Take 20 damage
-    public void TakeDamage()
+    public void TakeDamage(int damageAmount = 20)             // default to 20 for existing calls
     {
-        currHealth -= 20;
+        currHealth -= damageAmount;
         PlaySound(hitSound);
     }
 

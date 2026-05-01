@@ -36,7 +36,7 @@ public class ZombieCounter : MonoBehaviour
 
     private IEnumerator ShowWinScreenDelay()
     {
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(2f);
         winScreen?.Show(totalZombiesKilled, gameTimer.GetFormattedTime());
     }
 

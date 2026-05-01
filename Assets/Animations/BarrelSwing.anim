@@ -376,14 +376,14 @@ AnimationClip:
   m_HasGenericRootTransform: 1
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0.13333334
+  - time: 0.06666667
     functionName: EnableHitbox
     data: 
     objectReferenceParameter: {fileID: 1777194414769106483, guid: 3d5aa0886622ee743915fd8694bc46db, type: 3}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.33333334
+  - time: 0.36666667
     functionName: DisableHitbox
     data: 
     objectReferenceParameter: {fileID: 1777194414769106483, guid: 3d5aa0886622ee743915fd8694bc46db, type: 3}

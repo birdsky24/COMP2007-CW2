@@ -13,7 +13,6 @@ public class Barrel : Interactable
 
     protected override void Interact()
     {
-        Debug.Log("Interacted with " + gameObject.name);
         if (counter != null)
             counter.Increment();
         if (healthBar != null)

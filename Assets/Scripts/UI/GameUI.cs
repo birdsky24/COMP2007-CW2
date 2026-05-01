@@ -10,6 +10,7 @@ public class GameUI : MonoBehaviour
     [SerializeField] private GameObject crosshairUI;
     [SerializeField] private GameObject hpBarUI;
     [SerializeField] private GameObject promptTextUI;
+    [SerializeField] private GameObject cooldownUI;
 
     public static GameUI Instance;
 
@@ -28,6 +29,7 @@ public class GameUI : MonoBehaviour
         crosshairUI.SetActive(false);
         hpBarUI.SetActive(false);
         promptTextUI.SetActive(false);
+        cooldownUI.SetActive(false);
     }
 
     public void ShowHUD()
@@ -40,5 +42,6 @@ public class GameUI : MonoBehaviour
         crosshairUI.SetActive(true);
         hpBarUI.SetActive(true);
         promptTextUI.SetActive(true);
+        cooldownUI.SetActive(true);
     }
 }

@@ -27,6 +27,8 @@ public class PauseMenu : MonoBehaviour
 
     public void Toggle()
     {
+        if (settingsMenu != null && settingsMenu.gameObject.activeSelf) return;
+
         if (isPaused)
             Resume();
         else

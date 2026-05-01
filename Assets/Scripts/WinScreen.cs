@@ -9,6 +9,7 @@ public class WinScreen : MonoBehaviour
     private GameTimer gameTimer;
     private ZombieCounter zombieCounter;
     private SettingsMenu settingsMenu;
+    private Leaderboard leaderboard;
 
     void Awake()
     {
@@ -19,6 +20,7 @@ public class WinScreen : MonoBehaviour
     {
         zombieCounter = FindObjectOfType<ZombieCounter>();
         gameTimer = FindObjectOfType<GameTimer>();
+        leaderboard = FindObjectOfType<Leaderboard>(true);
     }
 
     public void Show(int zombiesKilled, string time)
@@ -27,8 +29,13 @@ public class WinScreen : MonoBehaviour
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        resultText.text = "SUCCESS\n" + "You killed " + zombiesKilled + "\n" + " zombies in\n" + time + "!";
+
+        resultText.text = "VICTORY\n" +
+                          "Zombies killed: " + zombiesKilled + "\n" +
+                          "Time: " + time;
+
         GameUI.Instance?.HideHUD();
+        Leaderboard.Instance?.ShowNameEntry(resultText.text);   // PASS resultText directly
     }
 
     public void RestartScene()
