@@ -2,6 +2,8 @@ using UnityEngine;
 public class AttackState : BaseState
 {
     private float losePlayerTimer;
+    private float roarTimer = 0f;
+    private float roarTimeout = 0.5f;
     private bool hasRoared = false;
     private HealthBarScript playerHealth;
 
@@ -13,6 +15,7 @@ public class AttackState : BaseState
         enemy.Animator.SetTrigger("roar");
         enemy.Agent.isStopped = true;
         hasRoared = false;
+        roarTimer = 0f;
     }
 
     public override void Exit()
@@ -31,11 +34,19 @@ public class AttackState : BaseState
     {
         if (!hasRoared)
         {
+            roarTimer += Time.deltaTime;
             AnimatorStateInfo stateInfo = enemy.Animator.GetCurrentAnimatorStateInfo(0);
-            if (stateInfo.IsName("roar") && stateInfo.normalizedTime >= 1f)
+
+            float distanceToPlayer = Vector3.Distance(
+                enemy.transform.position, enemy.Player.transform.position);
+
+            if ((stateInfo.IsName("roar") && stateInfo.normalizedTime >= 1f)
+                || roarTimer >= roarTimeout
+                || distanceToPlayer < 1.5f)
             {
                 hasRoared = true;
                 enemy.Agent.isStopped = false;
+                enemy.Animator.SetBool("run", true);                    // ADD THIS: trigger transition out of roar
                 enemy.Agent.SetDestination(enemy.Player.transform.position);
             }
             else return;
@@ -45,8 +56,9 @@ public class AttackState : BaseState
         {
             losePlayerTimer = 0;
 
+            // rotate on Y axis only — prevents tilting when player jumps
             Vector3 direction = (enemy.Player.transform.position - enemy.transform.position).normalized;
-            direction.y = 0f;
+            direction.y = 0f;                               // lock Y axis
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             enemy.transform.rotation = Quaternion.RotateTowards(
                 enemy.transform.rotation, targetRotation, 360f * Time.deltaTime);
@@ -62,8 +74,7 @@ public class AttackState : BaseState
                 enemy.Animator.SetBool("atack2", true);
                 enemy.Animator.SetBool("atack3", true);
                 enemy.Animator.SetBool("atack4", true);
-                enemy.transform.LookAt(enemy.Player.transform);
-                // damage is now handled by Animation Event
+                // REMOVED: enemy.transform.LookAt — was causing body tilting
             }
             else
             {

@@ -52,6 +52,18 @@ public class PlayerMotor : MonoBehaviour
             playerVelocity.y = -2f;
         controller.Move(playerVelocity * Time.deltaTime);
     }
+    public void LaunchPlayer(float force)
+    {
+        Vector3 launchDirection = transform.forward + Vector3.up * 0.5f;
+        playerVelocity = launchDirection * force;
+        StartCoroutine(StopLaunch());
+    }
+
+    private IEnumerator StopLaunch()
+    {
+        yield return new WaitForSeconds(1f);
+        playerVelocity = Vector3.zero;                          // stop launch force after 0.2s
+    }
     public void Jump()
     {
         if (isGrounded)

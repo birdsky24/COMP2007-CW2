@@ -30,6 +30,13 @@ public class PlacementMode : MonoBehaviour
     {
         if (!isActive || _previewObject == null) return;
 
+        // exit placement mode if no barrels left
+        if (counter.Count <= 0)
+        {
+            TogglePlacementMode();
+            return;
+        }
+
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
         Debug.DrawRay(ray.origin, ray.direction * distance);
         RaycastHit hitInfo;
@@ -37,6 +44,19 @@ public class PlacementMode : MonoBehaviour
         if (Physics.Raycast(ray, out hitInfo, distance, placementSurfaceMask))
         {
             _currentPlacementPosition = hitInfo.point;
+
+            float distanceToPlacement = Vector3.Distance(
+                transform.position, _currentPlacementPosition);
+
+            if (distanceToPlacement > 3f)
+            {
+                _previewObject.SetActive(false);
+                return;
+            }
+            else
+            {
+                _previewObject.SetActive(true);
+            }
 
             Quaternion rotation = Quaternion.Euler(
                 0f, cam.transform.rotation.eulerAngles.y, 0f);
@@ -49,6 +69,10 @@ public class PlacementMode : MonoBehaviour
                 Place(rotation);
                 counter.Decrement();
             }
+        }
+        else
+        {
+            _previewObject.SetActive(false);
         }
     }
 
