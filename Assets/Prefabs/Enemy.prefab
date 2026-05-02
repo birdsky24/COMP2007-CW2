@@ -5438,6 +5438,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaaa272f7513c614da12a8cbd7641f58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  killedByThrow: 0
   path: {fileID: 0}
   sightDistance: 20
   fieldOfView: 85
@@ -5749,7 +5750,6 @@ MonoBehaviour:
   - {fileID: 4544508610750415332, guid: 1e6f0b5349e214e4c8e189ab6cffeb23, type: 3}
   - {fileID: 4544508610750415332, guid: 827e357f66320114980d4d9d5f5831df, type: 3}
   - {fileID: 4544508610750415332, guid: 936f5dba93153b544964bf8c0082268d, type: 3}
-  - {fileID: 4544508610750415332, guid: f9ddf4e864fcfef449669c7b9c952fa8, type: 3}
   - {fileID: 4544508610750415332, guid: 1f4b589b73bb6544a8cf4aef4881e529, type: 3}
   hitSplatterCount: 6
   deathSplatterCount: 20

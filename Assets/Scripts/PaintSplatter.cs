@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class PaintSplatter : MonoBehaviour
@@ -10,9 +11,10 @@ public class PaintSplatter : MonoBehaviour
     [SerializeField] private float deathSplatterRadius = 1f;    // larger on death
     [SerializeField] private LayerMask surfaceMask;
     [SerializeField] private int maxDecals = 500;
+    [SerializeField] private float bleedInterval = 0.2f;   // ADD THIS
     private Transform paintParent;
-
-    private static Queue<GameObject> allDecals = new Queue<GameObject>();
+    private Queue<GameObject> allDecals = new Queue<GameObject>(); // REMOVE static keyword
+    private Coroutine bleedCoroutine;
 
     void Start()
     {
@@ -33,7 +35,34 @@ public class PaintSplatter : MonoBehaviour
 
     public void SplatterOnDeath(Vector3 position)
     {
+        StopBleeding();
         Splatter(position, deathSplatterCount, deathSplatterRadius);
+    }
+
+    public void StartBleeding()
+    {
+        if (bleedCoroutine == null)
+        {
+            bleedCoroutine = StartCoroutine(BleedLoop());
+        }
+    }
+
+    public void StopBleeding()
+    {
+        if (bleedCoroutine != null)
+        {
+            StopCoroutine(bleedCoroutine);
+            bleedCoroutine = null;
+        }
+    }
+
+    private IEnumerator BleedLoop()
+    {
+        while (true)
+        {
+            yield return new WaitForSecondsRealtime(bleedInterval);
+            Splatter(transform.position, 1, 0.3f);
+        }
     }
 
     private void Splatter(Vector3 position, int count, float radius)
@@ -45,13 +74,13 @@ public class PaintSplatter : MonoBehaviour
             Vector2 randomCircle = Random.insideUnitCircle * radius;
             Vector3 rayOrigin = new Vector3(
                 position.x + randomCircle.x,
-                position.y + 1f,
+                position.y + 3f,                                // CHANGE: 1f to 3f
                 position.z + randomCircle.y);
 
             Ray ray = new Ray(rayOrigin, Vector3.down);
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, 5f, surfaceMask))
+            if (Physics.Raycast(ray, out hit, 20f, surfaceMask))        // CHANGE: 10f to 20f
                 SpawnDecal(hit.point, hit.normal);
 
             Vector3 outwardDirection = new Vector3(randomCircle.x, 0, randomCircle.y).normalized;

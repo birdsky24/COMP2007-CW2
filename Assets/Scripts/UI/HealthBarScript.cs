@@ -14,14 +14,23 @@ public class HealthBarScript : MonoBehaviour
 
     private DeathScreen deathScreen;
     private bool isDead = false;
+    private PaintSplatter paintSplatter;
+    private PlayerEffects playerEffects;
+    private Transform playerTransform;
 
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip hitSound;
     // start is called before the first frame update
     void Start()
     {
-        currHealth = maxHealth; // set the current health to max health
+        currHealth = maxHealth;
         deathScreen = FindObjectOfType<DeathScreen>(true);
+        playerEffects = FindObjectOfType<PlayerEffects>();
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        playerTransform = player.transform;                     // ADD THIS
+        paintSplatter = player.GetComponent<PaintSplatter>();
+        if (paintSplatter == null)
+            paintSplatter = player.GetComponentInChildren<PaintSplatter>();
     }
 
     // Update is called once per frame
@@ -41,20 +50,29 @@ public class HealthBarScript : MonoBehaviour
         {
             isDead = true;
             deathScreen.Show();
+            paintSplatter?.StopBleeding();
         }
     }
 
     private void PlaySound(AudioClip clip)
     {
         audioSource.pitch = Random.Range(0.8f, 1.2f);  // slight pitch variation
-        audioSource.PlayOneShot(clip);
+        audioSource.PlayOneShot(clip, 2f);
     }
 
-    // Take 20 damage
-    public void TakeDamage(int damageAmount = 20)             // default to 20 for existing calls
+    public void TakeDamage(int damageAmount = 20)
     {
         currHealth -= damageAmount;
         PlaySound(hitSound);
+        if (playerEffects != null)
+            playerEffects.OnDamage();
+        if (paintSplatter != null)
+            paintSplatter.SplatterOnHit(playerTransform.position); // USE playerTransform
+
+        if (currHealth <= 35 && currHealth > 0)             // ADD THIS
+            paintSplatter.StartBleeding();
+        else
+            paintSplatter.StopBleeding();
     }
 
     // Take 40 damage
@@ -62,6 +80,15 @@ public class HealthBarScript : MonoBehaviour
     {
         currHealth -= 40;
         PlaySound(hitSound);
+        if (playerEffects != null)
+            playerEffects.OnDamage();
+        if (paintSplatter != null)
+            paintSplatter.SplatterOnHit(playerTransform.position); // USE playerTransform
+
+        if (currHealth <= 35 && currHealth > 0)             // ADD THIS
+            paintSplatter.StartBleeding();
+        else
+            paintSplatter.StopBleeding();
     }
 
     // Take 60 damage
@@ -69,6 +96,15 @@ public class HealthBarScript : MonoBehaviour
     {
         currHealth -= 60;
         PlaySound(hitSound);
+        if (playerEffects != null)
+            playerEffects.OnDamage();
+        if (paintSplatter != null)
+            paintSplatter.SplatterOnHit(playerTransform.position); // USE playerTransform
+
+        if (currHealth <= 35 && currHealth > 0)             // ADD THIS
+            paintSplatter.StartBleeding();
+        else
+            paintSplatter.StopBleeding();
     }
 
     // Heal 30 health

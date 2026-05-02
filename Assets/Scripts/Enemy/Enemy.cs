@@ -80,6 +80,11 @@ public class Enemy : MonoBehaviour
         if (paintSplatter != null)
             paintSplatter.SplatterOnHit(transform.position);
 
+        if (currHealth <= 35 && currHealth > 0)             // ADD THIS
+            paintSplatter.StartBleeding();
+        else
+            paintSplatter.StopBleeding();
+
         if (currHealth <= 0)
         {
             Die();

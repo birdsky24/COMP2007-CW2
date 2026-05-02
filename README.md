@@ -1,6 +1,7 @@
 # COMP2007-CW2
 
 
+
 Free Assets Used:
 
 Background Image for main menu
@@ -27,3 +28,8 @@ https://assetstore.unity.com/packages/audio/sound-fx/zombie-massacre-sound-effec
 Metal sound effects
 https://pixabay.com/sound-effects/film-special-effects-metal-pipe-357573/
 https://pixabay.com/sound-effects/film-special-effects-groaning-metal-511322/
+
+Low Health Overlay
+
+https://opengameart.org/content/blood-overlay
+
