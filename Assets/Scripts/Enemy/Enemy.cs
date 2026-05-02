@@ -10,6 +10,9 @@ public class Enemy : MonoBehaviour
     private GameObject player;
     private Animator animator;
     private Vector3 lastKnowPos;
+    private float dropRate = 0.4f;                              // ADD THIS: starts at 40%
+    private float dropRateIncreaseInterval = 30f;               // ADD THIS: increases every 30s
+    private float maxDropRate = 0.9f;
 
     public NavMeshAgent Agent { get => agent;  }
     public GameObject Player { get => player; }
@@ -56,6 +59,17 @@ public class Enemy : MonoBehaviour
         else
             pickupsParent = new GameObject("Pickups").transform;
         zombieCounter = FindObjectOfType<ZombieCounter>();
+        StartCoroutine(IncreaseDropRate());
+    }
+
+    private IEnumerator IncreaseDropRate()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(dropRateIncreaseInterval);
+            dropRate = Mathf.Min(maxDropRate, dropRate + 0.05f);
+            Debug.Log("Drop rate increased to: " + dropRate);
+        }
     }
 
     // Update is called once per frame
@@ -109,7 +123,7 @@ public class Enemy : MonoBehaviour
     {
         if (barrelDropPrefabs.Length == 0) return;
 
-        if (Random.value <= 0.4f)
+        if (Random.value <= dropRate)                           // CHANGE: use dynamic dropRate
         {
             GameObject randomBarrel = barrelDropPrefabs[Random.Range(0, barrelDropPrefabs.Length)];
             Vector3 spawnPosition = new Vector3(

@@ -63,6 +63,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: BarrelPreview
       objectReference: {fileID: 0}
+    - target: {fileID: 1777194414769106483, guid: 3d5aa0886622ee743915fd8694bc46db, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7287975416713549546, guid: 3d5aa0886622ee743915fd8694bc46db, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6356982791968862663, guid: 3d5aa0886622ee743915fd8694bc46db, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3d5aa0886622ee743915fd8694bc46db, type: 3}

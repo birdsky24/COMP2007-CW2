@@ -33,3 +33,9 @@ Low Health Overlay
 
 https://opengameart.org/content/blood-overlay
 
+Barrel Spawn/Pickup sound
+
+https://pixabay.com/sound-effects/film-special-effects-balloon-pop-48030/
+
+https://pixabay.com/sound-effects/film-special-effects-heavyobjectsfalling-82009/
+
