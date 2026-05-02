@@ -96,7 +96,7 @@ public class ThrownBarrel : MonoBehaviour
         Enemy enemy = collision.gameObject.GetComponentInParent<Enemy>();
         if (enemy != null && enemy.currHealth > 0)
         {
-            enemy.TakeDamage(damage);
+            enemy.TakeDamage(damage, true);                         // ADD true: fromThrow
             bounceCount++;
             damage = Mathf.Max(0, damage - 20);
             ignorePlayer = false;

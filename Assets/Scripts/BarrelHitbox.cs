@@ -87,7 +87,7 @@ public class BarrelHitbox : MonoBehaviour
         if (enemy != null)
         {
             if (enemy.currHealth <= 0) return;
-            enemy.TakeDamage(damage);
+            enemy.TakeDamage(damage, false);
             PlaySound(enemyHitSound);
             durability--;
 

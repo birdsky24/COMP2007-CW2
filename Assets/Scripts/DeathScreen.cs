@@ -9,6 +9,7 @@ public class DeathScreen : MonoBehaviour
     private GameTimer gameTimer;
     private ZombieCounter zombieCounter;
 
+    [SerializeField] private bool infiniteMode = false;
     [SerializeField] private TextMeshProUGUI statsText;
     [SerializeField] private TextMeshProUGUI leaderboardText;
 
@@ -32,15 +33,25 @@ public class DeathScreen : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         GameUI.Instance?.HideHUD();
-        
+
         if (statsText != null)
-            statsText.text = "FAILURE\n" + 
+            statsText.text = "FAILURE\n" +
                              "Zombies killed: " + zombieCounter.TotalKilled + "\n" +
                              "Zombies remaining: " + zombieCounter.ZombiesRemaining + "\n" +
-                             "Time survived: " + gameTimer.GetFormattedTime();
+                             "Time survived: " + gameTimer.GetFormattedTime() + "\n" +
+                             "Score: " + zombieCounter.Score;  // ADD THIS
+
+        if (infiniteMode)
+            statsText.text = "GAME OVER\n" +
+                             "Zombies killed: " + zombieCounter.TotalKilled + "\n" +
+                             "Time survived: " + gameTimer.GetFormattedTime() + "\n" +
+                             "Score: " + zombieCounter.Score;  // ADD THIS
 
         if (leaderboardText != null)
             leaderboardText.text = GetLeaderboard();
+
+        if (infiniteMode && Leaderboard.Instance != null)
+            Leaderboard.Instance.ShowNameEntry(statsText.text);
     }
 
     private string GetLeaderboard()
@@ -82,5 +93,17 @@ public class DeathScreen : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(0.2f);  // use realtime since timescale may be 0
         SceneManager.LoadScene(0);
+    }
+
+    private IEnumerator LoadWithDelay3()
+    {
+        yield return new WaitForSecondsRealtime(0.2f);
+        SceneManager.LoadScene(2);
+    }
+
+    public void LoadInfinite()
+    {
+        Time.timeScale = 1f;
+        StartCoroutine(LoadWithDelay3());
     }
 }

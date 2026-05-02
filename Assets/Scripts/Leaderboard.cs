@@ -6,17 +6,19 @@ using System;
 public class Leaderboard : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI leaderboardText;
-    [SerializeField] private GameObject nameEntryPanel;     // panel with 3 letter input
-    [SerializeField] private TMP_InputField nameInputField; // input field for name
+    [SerializeField] private GameObject nameEntryPanel;
+    [SerializeField] private TMP_InputField nameInputField;
     [SerializeField] private int maxEntries = 10;
 
     public static Leaderboard Instance;
-
+    private int pendingScore;
     private string pendingTime;
     private int pendingZombies;
     private float pendingRawTime;
 
+    [SerializeField] private bool infiniteMode = false;
     [SerializeField] private UnityEngine.UI.Button confirmButton;
+
     [Serializable]
     public class LeaderboardEntry
     {
@@ -24,6 +26,7 @@ public class Leaderboard : MonoBehaviour
         public string time;
         public int zombiesKilled;
         public float rawTime;
+        public int score;
     }
 
     [Serializable]
@@ -59,6 +62,7 @@ public class Leaderboard : MonoBehaviour
         {
             LeaderboardEntry entry = data.entries[i];
             display += (i + 1) + ". " + entry.playerName +
+                       "  " + entry.score + " pts" +
                        "  " + entry.time +
                        "  " + entry.zombiesKilled + " kills\n";
         }
@@ -67,14 +71,13 @@ public class Leaderboard : MonoBehaviour
 
     private void ForceUppercase(string value)
     {
-        nameInputField.SetTextWithoutNotify(value.ToUpper()); // ADD THIS: update without triggering listener again
+        nameInputField.SetTextWithoutNotify(value.ToUpper());
     }
 
     public void ShowNameEntry(string resultText)
     {
-        if (confirmButton != null)
-            confirmButton.interactable = true;
-        // parse zombies and time directly from result text
+        Debug.Log("Full text received:\n" + resultText);
+
         string[] lines = resultText.Split('\n');
         pendingTime = "";
         pendingZombies = 0;
@@ -82,30 +85,64 @@ public class Leaderboard : MonoBehaviour
 
         foreach (string line in lines)
         {
-            if (line.Contains("Zombies killed:"))
-                int.TryParse(line.Replace("Zombies killed:", "").Trim(), out pendingZombies);
+            string trimmed = line.Trim();
 
-            if (line.Contains("Time:"))
+            if (trimmed.Contains("Zombies killed:"))
             {
-                pendingTime = line.Replace("Time:", "").Trim();
-                // convert MM:SS to raw seconds for sorting
-                string[] parts = pendingTime.Split(':');
-                if (parts.Length == 2)
-                {
-                    int minutes = 0, seconds = 0;
-                    int.TryParse(parts[0], out minutes);
-                    int.TryParse(parts[1], out seconds);
-                    pendingRawTime = minutes * 60f + seconds;
-                }
+                string val = trimmed.Replace("Zombies killed:", "").Trim();
+                int.TryParse(val, out pendingZombies);
+            }
+            else if (trimmed.Contains("Kills:"))
+            {
+                string val = trimmed.Replace("Kills:", "").Trim();
+                int.TryParse(val, out pendingZombies);
+            }
+
+            if (trimmed.Contains("Score:"))                         // ADD THIS
+            {
+                string val = trimmed.Replace("Score:", "").Trim();
+                int.TryParse(val, out pendingScore);
+            }
+
+            if (trimmed.Contains("Time survived:"))
+            {
+                pendingTime = trimmed.Replace("Time survived:", "").Trim();
+                ParseTime(pendingTime);
+            }
+            else if (trimmed.Contains("Time:"))
+            {
+                pendingTime = trimmed.Replace("Time:", "").Trim();
+                ParseTime(pendingTime);
             }
         }
+
+        // get score from ZombieCounter once outside the loop
+        ZombieCounter zombieCounter = FindObjectOfType<ZombieCounter>();
+        if (zombieCounter != null)
+            pendingScore = zombieCounter.Score;
+
+        Debug.Log("Final - zombies: " + pendingZombies + " time: " + pendingTime + " rawTime: " + pendingRawTime + " score: " + pendingScore);
 
         if (nameEntryPanel != null)
         {
             nameEntryPanel.SetActive(true);
+            if (confirmButton != null)
+                confirmButton.interactable = true;
             nameInputField.text = "";
             nameInputField.characterLimit = 3;
             nameInputField.ActivateInputField();
+        }
+    }
+
+    private void ParseTime(string time)
+    {
+        string[] parts = time.Split(':');
+        if (parts.Length == 2)
+        {
+            int minutes = 0, seconds = 0;
+            int.TryParse(parts[0], out minutes);
+            int.TryParse(parts[1], out seconds);
+            pendingRawTime = minutes * 60f + seconds;
         }
     }
 
@@ -117,7 +154,7 @@ public class Leaderboard : MonoBehaviour
         while (playerName.Length < 3)
             playerName += "_";
 
-        AddEntry(playerName, pendingTime, pendingZombies, pendingRawTime);
+        AddEntry(playerName, pendingTime, pendingZombies, pendingRawTime, pendingScore);
 
         if (nameEntryPanel != null)
             nameEntryPanel.SetActive(false);
@@ -128,18 +165,25 @@ public class Leaderboard : MonoBehaviour
         UpdateAllLeaderboardDisplays();
     }
 
-    private void AddEntry(string playerName, string formattedTime, int zombiesKilled, float rawTime)
+    private void AddEntry(string playerName, string formattedTime, int zombiesKilled, float rawTime, int score)  // FIX: added score parameter
     {
+        if (zombiesKilled <= 0) return;
+
         LeaderboardEntry entry = new LeaderboardEntry
         {
             playerName = playerName,
             time = formattedTime,
             zombiesKilled = zombiesKilled,
-            rawTime = rawTime
+            rawTime = rawTime,
+            score = score                                   // FIX: now uses parameter not undefined variable
         };
 
         data.entries.Add(entry);
-        data.entries.Sort((a, b) => a.rawTime.CompareTo(b.rawTime));
+
+        if (infiniteMode)
+            data.entries.Sort((a, b) => b.score.CompareTo(a.score));   // infinite: sort by score
+        else
+            data.entries.Sort((a, b) => a.rawTime.CompareTo(b.rawTime)); // normal: sort by fastest time
 
         if (data.entries.Count > maxEntries)
             data.entries.RemoveRange(maxEntries, data.entries.Count - maxEntries);
@@ -154,7 +198,7 @@ public class Leaderboard : MonoBehaviour
 
         if (data.entries.Count == 0)
         {
-            leaderboardText.text = "No entries yet";
+            leaderboardText.text = "LEADERBOARD\n\nNo entries yet";
             return;
         }
 
@@ -163,6 +207,7 @@ public class Leaderboard : MonoBehaviour
         {
             LeaderboardEntry entry = data.entries[i];
             display += (i + 1) + ". " + entry.playerName +
+                       "  " + entry.score + " pts" +
                        "  " + entry.time +
                        "  " + entry.zombiesKilled + " kills\n";
         }
@@ -171,7 +216,6 @@ public class Leaderboard : MonoBehaviour
 
     private void UpdateAllLeaderboardDisplays()
     {
-        // update any leaderboard text in pause and death screens
         PauseMenu pauseMenu = FindObjectOfType<PauseMenu>(true);
         DeathScreen deathScreen = FindObjectOfType<DeathScreen>(true);
 
@@ -195,6 +239,12 @@ public class Leaderboard : MonoBehaviour
         {
             string json = PlayerPrefs.GetString("Leaderboard");
             data = JsonUtility.FromJson<LeaderboardData>(json);
+            data.entries.RemoveAll(e => e.zombiesKilled <= 0);
+
+            if (infiniteMode)
+                data.entries.Sort((a, b) => b.score.CompareTo(a.score));
+            else
+                data.entries.Sort((a, b) => a.rawTime.CompareTo(b.rawTime));
         }
     }
 

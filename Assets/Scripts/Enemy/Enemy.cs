@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour
     public Animator Animator { get => animator; }
     public Vector3 LastKnowPos { get => lastKnowPos; set => lastKnowPos = value; }
 
+    public bool killedByThrow = false;
     public Path path;
     public float sightDistance = 20f;
     public float fieldOfView = 85f;
@@ -66,23 +67,27 @@ public class Enemy : MonoBehaviour
         CheckPlayerProximity();
         currentState = stateMachine.activeState.ToString();
     }
-    public void TakeDamage(int damage)
+
+    public void TakeDamage(int damage, bool fromThrow = false)
     {
         if (currHealth <= 0) return;
+        if (stateMachine.activeState is DeathState) return;
+
+        if (fromThrow) killedByThrow = true;                    // ADD THIS
 
         currHealth -= damage;
 
         if (paintSplatter != null)
             paintSplatter.SplatterOnHit(transform.position);
 
-        if (!(stateMachine.activeState is AttackState))  // only change if not already attacking
-            stateMachine.ChangeState(new AttackState());
-
         if (currHealth <= 0)
         {
             Die();
             return;
-        } 
+        }
+
+        if (!(stateMachine.activeState is AttackState))
+            stateMachine.ChangeState(new AttackState());
     }
 
     private void Die()

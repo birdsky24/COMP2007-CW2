@@ -95,4 +95,16 @@ public class PauseMenu : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.2f);  // use realtime since timescale may be 0
         SceneManager.LoadScene(0);
     }
+
+    private IEnumerator LoadWithDelay3()
+    {
+        yield return new WaitForSecondsRealtime(0.2f);
+        SceneManager.LoadScene(2);
+    }
+
+    public void LoadInfinite()
+    {
+        Time.timeScale = 1f;
+        StartCoroutine(LoadWithDelay3());
+    }
 }

@@ -11,6 +11,10 @@ public class DeathState : BaseState
             enemy.Agent.isStopped = true;
         enemy.Agent.enabled = false;
         enemy.Animator.SetTrigger("death");
+
+        ZombieCounter zombieCounter = GameObject.FindObjectOfType<ZombieCounter>();
+        if (zombieCounter != null)
+            zombieCounter.AddScore(enemy.killedByThrow);
     }
 
     public override void Perform()

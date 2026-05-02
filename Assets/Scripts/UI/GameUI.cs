@@ -11,6 +11,7 @@ public class GameUI : MonoBehaviour
     [SerializeField] private GameObject hpBarUI;
     [SerializeField] private GameObject promptTextUI;
     [SerializeField] private GameObject cooldownUI;
+    [SerializeField] private GameObject multiplierUI;
 
     public static GameUI Instance;
 
@@ -30,6 +31,8 @@ public class GameUI : MonoBehaviour
         hpBarUI.SetActive(false);
         promptTextUI.SetActive(false);
         cooldownUI.SetActive(false);
+        if (zombieCountUI != null) zombieCountUI.SetActive(false);
+        if (multiplierUI != null) multiplierUI.SetActive(false);
     }
 
     public void ShowHUD()
@@ -43,6 +46,7 @@ public class GameUI : MonoBehaviour
         hpBarUI.SetActive(true);
         promptTextUI.SetActive(true);
         cooldownUI.SetActive(true);
+        if (multiplierUI != null) multiplierUI.SetActive(true); // ADD THIS
     }
 
     public void HidePartHUD()
@@ -61,5 +65,24 @@ public class GameUI : MonoBehaviour
         durabilityUI.SetActive(true);
         crosshairUI.SetActive(true);
         promptTextUI.SetActive(true);
+    }
+
+    public void HideRPartHUD()
+    {
+        zombieCountUI.SetActive(false);
+        timerUI.SetActive(false);
+        hpBarUI.SetActive(false);
+        cooldownUI.SetActive(false);
+        if (zombieCountUI != null) zombieCountUI.SetActive(false);
+        if (multiplierUI != null) multiplierUI.SetActive(false);
+    }
+
+    public void ShowRPartHUD()
+    {
+        zombieCountUI.SetActive(true);
+        timerUI.SetActive(true);
+        hpBarUI.SetActive(true);
+        cooldownUI.SetActive(true);
+        if (multiplierUI != null) multiplierUI.SetActive(true);
     }
 }

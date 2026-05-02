@@ -21,6 +21,17 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene(1); // Optionally: SceneManager.GetActiveScene().buildIndex + 1. Will load the next scene.
     }
 
+    private IEnumerator LoadWithDelay3()
+    {
+        yield return new WaitForSeconds(0.2f);
+        SceneManager.LoadScene(2); // Optionally: SceneManager.GetActiveScene().buildIndex + 1. Will load the next scene.
+    }
+
+    public void LoadInfinite()
+    {
+        StartCoroutine(LoadWithDelay3());
+    }
+
     public void QuitGame()
     {
         Application.Quit(); // Doesn't work in the editor because it could close unity and lose unsaved work

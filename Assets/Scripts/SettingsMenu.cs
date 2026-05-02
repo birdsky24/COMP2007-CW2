@@ -49,7 +49,7 @@ public class SettingsMenu : MonoBehaviour
         previousScreen = caller;
         previousScreen.SetActive(false);
         gameObject.SetActive(true);
-        GameUI.Instance?.HideHUD();
+        GameUI.Instance?.HideRPartHUD();
     }
 
     public void Back()
@@ -57,7 +57,7 @@ public class SettingsMenu : MonoBehaviour
         gameObject.SetActive(false);
         if (previousScreen != null)
             previousScreen.SetActive(true);
-        GameUI.Instance?.ShowHUD();
+        GameUI.Instance?.ShowRPartHUD();
     }
 
     private string GetControlsText()
