@@ -1,0 +1,12 @@
+<linker>
+	<assembly fullname="Assembly-CSharp">
+		<type fullname="AttackState" preserve="all"/>
+		<type fullname="PatrolState" preserve="all"/>
+		<type fullname="SearchState" preserve="all"/>
+		<type fullname="DeathState" preserve="all"/>
+		<type fullname="BaseState" preserve="all"/>
+		<type fullname="StateMachine" preserve="all"/>
+		<type fullname="Enemy" preserve="all"/>
+		<type fullname="ZombieSpawner" preserve="all"/>
+	</assembly>
+</linker>
