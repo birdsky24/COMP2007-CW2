@@ -1,7 +1,5 @@
 # COMP2007-CW2
 
-
-
 Free Assets Used:
 
 Background Image for main menu
@@ -45,16 +43,19 @@ https://assetstore.unity.com/packages/2d/textures-materials/sky/allsky-free-10-s
 Walls
 https://assetstore.unity.com/packages/2d/textures-materials/concrete/yughues-free-concrete-materials-12951
 
+Throw Sound effect
+https://pixabay.com/sound-effects/film-special-effects-fireball-whoosh-2-179126/
 
+Swing Sound effect
+https://pixabay.com/sound-effects/film-special-effects-swing-whoosh-weapon-3-189823/
 
+Stomp Sound effect
+https://pixabay.com/sound-effects/film-special-effects-poof-of-smoke-87381/
 
 \## Leaderboard
-
-
 
 <!-- LEADERBOARD\_START -->
 
 No entries yet
 
 <!-- LEADERBOARD\_END -->
-

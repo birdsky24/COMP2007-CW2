@@ -5,7 +5,8 @@ public class Barrel : Interactable
 {
     private BarrelCounter counter;
     private HealthBarScript healthBar;
-    private ZombieCounter zombieCounter;                    // ADD THIS
+    private ZombieCounter zombieCounter;
+    private bool hasBeenPickedUp = false;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip pickupSound;
 
@@ -18,6 +19,9 @@ public class Barrel : Interactable
 
     protected override void Interact()
     {
+        if (hasBeenPickedUp) return;                        // ADD THIS: prevent multiple pickups
+        hasBeenPickedUp = true;
+
         if (counter != null) counter.Increment();
         if (healthBar != null) healthBar.AddHealth();
         if (zombieCounter != null) zombieCounter.AddPickupScore(50); // ADD THIS

@@ -15,6 +15,7 @@ public class BarrelHitbox : MonoBehaviour
     [SerializeField] private AudioClip wallHitSound;
     [SerializeField] private AudioClip barrelHitSound;
     [SerializeField] private AudioClip barrelBreakSound;
+    [SerializeField] private AudioClip barrelSwingSound;
     [SerializeField] private GameObject heldBarrel;
 
     private System.Collections.Generic.HashSet<Enemy> hitEnemiesThisSwing = new System.Collections.Generic.HashSet<Enemy>();
@@ -43,6 +44,8 @@ public class BarrelHitbox : MonoBehaviour
 
         IsSwinging = true;
         hitboxCollider.enabled = true;
+        audioSource.pitch = Random.Range(0.8f, 1.2f);  // slight pitch variation
+        PlaySound(barrelSwingSound);
 
         // RESET SWING DATA
         hitEnemiesThisSwing.Clear();
@@ -140,15 +143,15 @@ public class BarrelHitbox : MonoBehaviour
         isBroken = true;
         DisableHitbox();
         PlaySound(barrelBreakSound);
+        barrelAnimator.SetTrigger("break");
 
         BarrelCounter counter = GetBarrelCounter();
 
         if (counter != null && counter.Count > 0)
-            counter.Decrement();                // SyncAll inside Decrement handles everything
+            counter.Decrement();
         else
             HideBarrel();
     }
-
     private void PlaySound(AudioClip clip)
     {
         if (clip == null) return;

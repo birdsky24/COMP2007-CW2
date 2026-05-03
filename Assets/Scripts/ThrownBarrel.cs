@@ -10,12 +10,18 @@ public class ThrownBarrel : MonoBehaviour
     private bool ignorePlayer = true;                       // ignore player until first bounce
     private GameObject player;
     private HealthBarScript playerHealth;
+    [SerializeField] private AudioClip bounceSound;
+    private AudioSource audioSource;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         player = GameObject.FindGameObjectWithTag("Player");
         playerHealth = FindObjectOfType<HealthBarScript>();
+
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
 
         GameObject pickups = GameObject.Find("Pickups");
         if (pickups != null)
@@ -63,6 +69,11 @@ public class ThrownBarrel : MonoBehaviour
         col.material = bounceMat;
     }
 
+    public void SetBounceSound(AudioClip clip)
+    {
+        bounceSound = clip;
+    }
+
     private void AddLargerHitCollider()
     {
         SphereCollider largeCol = gameObject.AddComponent<SphereCollider>();
@@ -75,6 +86,11 @@ public class ThrownBarrel : MonoBehaviour
     {
         if (hasLanded) return;
 
+        if (audioSource != null && bounceSound != null)
+        {
+            audioSource.pitch = Random.Range(0.8f, 1.2f);
+            audioSource.PlayOneShot(bounceSound);
+        }
         // check if hit floor by tag or layer
         if (collision.gameObject.CompareTag("Floor") ||
             collision.gameObject.layer == LayerMask.NameToLayer("Floor"))

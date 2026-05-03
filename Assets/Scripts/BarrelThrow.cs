@@ -6,6 +6,9 @@ public class BarrelThrow : MonoBehaviour
     private PlacementMode placementMode;
     private BarrelCounter barrelCounter;
     private BarrelHitbox barrelHitbox;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip throwSound;
+    [SerializeField] private AudioClip bounceSound;
 
     [SerializeField] private GameObject heldBarrel;         // drag HeldBlueBarrel here
     [SerializeField] private GameObject[] throwBarrelPrefabs; // drag your barrel prefabs here
@@ -65,9 +68,13 @@ public class BarrelThrow : MonoBehaviour
 
         ThrownBarrel thrownBarrel = thrown.AddComponent<ThrownBarrel>();
         thrownBarrel.damage = 80;
+        thrownBarrel.SetBounceSound(bounceSound);
 
         rb.AddForce(cam.transform.forward * throwForce + Vector3.up * throwUpwardForce, ForceMode.Impulse);
         rb.AddTorque(Random.insideUnitSphere * 5f, ForceMode.Impulse);
+
+        if (throwSound != null && audioSource != null)          // ADD THIS
+            audioSource.PlayOneShot(throwSound);
 
         barrelCounter.Decrement();
     }

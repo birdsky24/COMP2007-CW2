@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerMotor : MonoBehaviour
 {
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip stompSound;
     private CharacterController controller;
     private Vector3 playerVelocity;
     private bool isGrounded;
@@ -146,9 +148,17 @@ public class PlayerMotor : MonoBehaviour
         hasJumped = false;
         currentStompTarget = null;
 
+        PlaySound(stompSound);
+
         PaintSplatter paint = enemy.GetComponent<PaintSplatter>();
         if (paint != null)
             paint.SplatterOnHit(enemy.transform.position);
+    }
+
+    private void PlaySound(AudioClip clip)
+    {
+        audioSource.pitch = Random.Range(0.8f, 1.2f);  // slight pitch variation
+        audioSource.PlayOneShot(clip);
     }
 
     public float GetStompCooldownProgress()                    // ADD THIS

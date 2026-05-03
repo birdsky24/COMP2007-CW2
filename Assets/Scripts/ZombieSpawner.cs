@@ -117,8 +117,14 @@ public class ZombieSpawner : MonoBehaviour
         }
 
         Enemy spawnedEnemy = zombie.GetComponent<Enemy>();
-        if (spawnedEnemy != null && paths.Length > 0)
-            spawnedEnemy.path = paths[Random.Range(0, paths.Length)];
+        if (spawnedEnemy != null)
+        {
+            if (paths.Length > 0)
+                spawnedEnemy.path = paths[Random.Range(0, paths.Length)];
+
+            // ADD THIS: start in attack state since player is active
+            StartCoroutine(SetAttackStateNextFrame(spawnedEnemy));
+        }
 
         if (enemiesParent != null)
             zombie.transform.SetParent(enemiesParent);
@@ -131,5 +137,16 @@ public class ZombieSpawner : MonoBehaviour
 
         if (zombieCounter != null)
             zombieCounter.OnZombieSpawned();
+    }
+
+    private IEnumerator SetAttackStateNextFrame(Enemy enemy)
+    {
+        yield return null;                                      // wait one frame for Enemy.Start to run
+        if (enemy != null && enemy.currHealth > 0)
+        {
+            StateMachine sm = enemy.GetComponent<StateMachine>();
+            if (sm != null)
+                sm.ChangeState(new AttackState());
+        }
     }
 }
