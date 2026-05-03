@@ -91,9 +91,36 @@ public class SettingsMenu : MonoBehaviour
     public void Back()
     {
         gameObject.SetActive(false);
+
         if (previousScreen != null)
+        {
             previousScreen.SetActive(true);
-        GameUI.Instance?.ShowRPartHUD();
+
+            if (previousScreen.GetComponent<PauseMenu>() != null)
+                GameUI.Instance?.ShowHUD();
+            else
+                GameUI.Instance?.HideHUD();
+        }
+        else
+        {
+            // try static instance first
+            if (MainMenu.Instance != null)
+            {
+                MainMenu.Instance.gameObject.SetActive(true);
+                return;
+            }
+
+            // fallback: find by name including inactive
+            GameObject[] all = Resources.FindObjectsOfTypeAll<GameObject>();
+            foreach (GameObject obj in all)
+            {
+                if (obj.name == "Main Menu" && obj.scene.isLoaded)
+                {
+                    obj.SetActive(true);
+                    break;
+                }
+            }
+        }
     }
 
     private string GetControlsText()
@@ -102,7 +129,8 @@ public class SettingsMenu : MonoBehaviour
                 "Move                              WASD\n" +
                 "Look                               Mouse\n" +
                 "Jump                              Space\n" +
-                "Toggle Sprint                   Shift\n" +
+                "      -Stomp                      Space\n" +
+        "Toggle Sprint                   Shift\n" +
                 "Toggle Crouch                 C\n" +
                 "Interact                            E\n" +
                 "Attack                              Left Click\n" +

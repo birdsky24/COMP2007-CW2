@@ -5,8 +5,22 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    public static MainMenu Instance;
+    private SettingsMenu settingsMenu;
+
+    void Start()
+    {
+        settingsMenu = FindObjectOfType<SettingsMenu>(true);
+    }
+
+    public void OpenSettings()
+    {
+        settingsMenu.Show(gameObject);                      // passes itself as caller
+    }
+
     void Awake()
     {
+        Instance = this;
         Time.timeScale = 1f;
         AudioListener.volume = PlayerPrefs.GetFloat("Volume", 1f); // ADD THIS: load saved volume
     }

@@ -12,6 +12,8 @@ public class GameUI : MonoBehaviour
     [SerializeField] private GameObject promptTextUI;
     [SerializeField] private GameObject cooldownUI;
     [SerializeField] private GameObject multiplierUI;
+    [SerializeField] private GameObject scorePopupUI;
+    [SerializeField] private GameObject stompCooldownUI;
 
     public static GameUI Instance;
 
@@ -20,69 +22,80 @@ public class GameUI : MonoBehaviour
         Instance = this;
     }
 
+    private void SetActive(GameObject obj, bool active)     // ADD THIS: safe setter
+    {
+        if (obj != null) obj.SetActive(active);
+    }
+
     public void HideHUD()
     {
-        zombieCountUI.SetActive(false);
-        barrelCountUI.SetActive(false);
-        placementBarrelCountUI.SetActive(false);
-        durabilityUI.SetActive(false);
-        timerUI.SetActive(false);
-        crosshairUI.SetActive(false);
-        hpBarUI.SetActive(false);
-        promptTextUI.SetActive(false);
-        cooldownUI.SetActive(false);
-        if (zombieCountUI != null) zombieCountUI.SetActive(false);
-        if (multiplierUI != null) multiplierUI.SetActive(false);
+        SetActive(zombieCountUI, false);
+        SetActive(barrelCountUI, false);
+        SetActive(placementBarrelCountUI, false);
+        SetActive(durabilityUI, false);
+        SetActive(timerUI, false);
+        SetActive(crosshairUI, false);
+        SetActive(hpBarUI, false);
+        SetActive(promptTextUI, false);
+        SetActive(cooldownUI, false);
+        SetActive(scorePopupUI, false);
+        SetActive(stompCooldownUI, false);
+        SetActive(multiplierUI, false);
     }
 
     public void ShowHUD()
     {
-        zombieCountUI.SetActive(true);
-        barrelCountUI.SetActive(true);
-        placementBarrelCountUI.SetActive(true);
-        durabilityUI.SetActive(true);
-        timerUI.SetActive(true);
-        crosshairUI.SetActive(true);
-        hpBarUI.SetActive(true);
-        promptTextUI.SetActive(true);
-        cooldownUI.SetActive(true);
-        if (multiplierUI != null) multiplierUI.SetActive(true); // ADD THIS
+        SetActive(zombieCountUI, true);
+        SetActive(barrelCountUI, true);
+        SetActive(placementBarrelCountUI, true);
+        SetActive(durabilityUI, true);
+        SetActive(timerUI, true);
+        SetActive(crosshairUI, true);
+        SetActive(hpBarUI, true);
+        SetActive(promptTextUI, true);
+        SetActive(cooldownUI, true);
+        SetActive(scorePopupUI, true);
+        SetActive(stompCooldownUI, true);
+        SetActive(multiplierUI, true);
     }
 
     public void HidePartHUD()
     {
-        barrelCountUI.SetActive(false);
-        placementBarrelCountUI.SetActive(false);
-        durabilityUI.SetActive(false);
-        crosshairUI.SetActive(false);
-        promptTextUI.SetActive(false);
+        SetActive(barrelCountUI, false);
+        SetActive(placementBarrelCountUI, false);
+        SetActive(durabilityUI, false);
+        SetActive(crosshairUI, false);
+        SetActive(promptTextUI, false);
     }
 
     public void ShowPartHUD()
     {
-        barrelCountUI.SetActive(true);
-        placementBarrelCountUI.SetActive(true);
-        durabilityUI.SetActive(true);
-        crosshairUI.SetActive(true);
-        promptTextUI.SetActive(true);
+        SetActive(barrelCountUI, true);
+        SetActive(placementBarrelCountUI, true);
+        SetActive(durabilityUI, true);
+        SetActive(crosshairUI, true);
+        SetActive(promptTextUI, true);
     }
 
     public void HideRPartHUD()
     {
-        zombieCountUI.SetActive(false);
-        timerUI.SetActive(false);
-        hpBarUI.SetActive(false);
-        cooldownUI.SetActive(false);
-        if (zombieCountUI != null) zombieCountUI.SetActive(false);
-        if (multiplierUI != null) multiplierUI.SetActive(false);
+        SetActive(zombieCountUI, false);
+        SetActive(timerUI, false);
+        SetActive(hpBarUI, false);
+        SetActive(cooldownUI, false);
+        SetActive(scorePopupUI, false);
+        SetActive(stompCooldownUI, false);
+        SetActive(multiplierUI, false);
     }
 
     public void ShowRPartHUD()
     {
-        zombieCountUI.SetActive(true);
-        timerUI.SetActive(true);
-        hpBarUI.SetActive(true);
-        cooldownUI.SetActive(true);
-        if (multiplierUI != null) multiplierUI.SetActive(true);
+        SetActive(zombieCountUI, true);
+        SetActive(timerUI, true);
+        SetActive(hpBarUI, true);
+        SetActive(cooldownUI, true);
+        SetActive(scorePopupUI, true);
+        SetActive(stompCooldownUI, true);
+        SetActive(multiplierUI, true);
     }
 }

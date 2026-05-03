@@ -39,6 +39,11 @@ https://pixabay.com/sound-effects/film-special-effects-balloon-pop-48030/
 
 https://pixabay.com/sound-effects/film-special-effects-heavyobjectsfalling-82009/
 
+Skybox
+https://assetstore.unity.com/packages/2d/textures-materials/sky/allsky-free-10-sky-skybox-set-146014
+
+Walls
+https://assetstore.unity.com/packages/2d/textures-materials/concrete/yughues-free-concrete-materials-12951
 
 
 

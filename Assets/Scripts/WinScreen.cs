@@ -27,16 +27,23 @@ public class WinScreen : MonoBehaviour
     public void Show(int zombiesKilled, string time)
     {
         gameObject.SetActive(true);
+
+        if (zombieCounter == null)
+            zombieCounter = FindObjectOfType<ZombieCounter>();
+        if (gameTimer == null)
+            gameTimer = FindObjectOfType<GameTimer>();
+
+        GameUI.Instance?.HideHUD();
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
         resultText.text = "VICTORY\n" +
                           "Zombies killed: " + zombiesKilled + "\n" +
-                          "Time: " + time;
+                          "Time: " + time + "\n" +
+                          "Score: " + (zombieCounter != null ? zombieCounter.Score.ToString() : "0");
 
-        GameUI.Instance?.HideHUD();
-        Leaderboard.Instance?.ShowNameEntry(resultText.text);   // PASS resultText directly
+        Leaderboard.Instance?.ShowNameEntry(resultText.text);
     }
 
     public void RestartScene()

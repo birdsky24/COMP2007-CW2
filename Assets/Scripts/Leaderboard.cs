@@ -19,6 +19,8 @@ public class Leaderboard : MonoBehaviour
     [SerializeField] private bool infiniteMode = false;
     [SerializeField] private UnityEngine.UI.Button confirmButton;
 
+    private string LeaderboardKey => infiniteMode ? "Leaderboard_Infinite" : "Leaderboard_Normal"; // ADD THIS
+
     [Serializable]
     public class LeaderboardEntry
     {
@@ -82,6 +84,7 @@ public class Leaderboard : MonoBehaviour
         pendingTime = "";
         pendingZombies = 0;
         pendingRawTime = 0f;
+        pendingScore = 0;
 
         foreach (string line in lines)
         {
@@ -98,7 +101,7 @@ public class Leaderboard : MonoBehaviour
                 int.TryParse(val, out pendingZombies);
             }
 
-            if (trimmed.Contains("Score:"))                         // ADD THIS
+            if (trimmed.Contains("Score:"))
             {
                 string val = trimmed.Replace("Score:", "").Trim();
                 int.TryParse(val, out pendingScore);
@@ -116,10 +119,13 @@ public class Leaderboard : MonoBehaviour
             }
         }
 
-        // get score from ZombieCounter once outside the loop
-        ZombieCounter zombieCounter = FindObjectOfType<ZombieCounter>();
-        if (zombieCounter != null)
-            pendingScore = zombieCounter.Score;
+        // fallback to ZombieCounter score if not parsed
+        if (pendingScore == 0)
+        {
+            ZombieCounter zombieCounter = FindObjectOfType<ZombieCounter>();
+            if (zombieCounter != null)
+                pendingScore = zombieCounter.Score;
+        }
 
         Debug.Log("Final - zombies: " + pendingZombies + " time: " + pendingTime + " rawTime: " + pendingRawTime + " score: " + pendingScore);
 
@@ -165,7 +171,7 @@ public class Leaderboard : MonoBehaviour
         UpdateAllLeaderboardDisplays();
     }
 
-    private void AddEntry(string playerName, string formattedTime, int zombiesKilled, float rawTime, int score)  // FIX: added score parameter
+    private void AddEntry(string playerName, string formattedTime, int zombiesKilled, float rawTime, int score)
     {
         if (zombiesKilled <= 0) return;
 
@@ -175,15 +181,11 @@ public class Leaderboard : MonoBehaviour
             time = formattedTime,
             zombiesKilled = zombiesKilled,
             rawTime = rawTime,
-            score = score                                   // FIX: now uses parameter not undefined variable
+            score = score
         };
 
         data.entries.Add(entry);
-
-        if (infiniteMode)
-            data.entries.Sort((a, b) => b.score.CompareTo(a.score));   // infinite: sort by score
-        else
-            data.entries.Sort((a, b) => a.rawTime.CompareTo(b.rawTime)); // normal: sort by fastest time
+        data.entries.Sort((a, b) => b.score.CompareTo(a.score)); // CHANGE: always sort by score
 
         if (data.entries.Count > maxEntries)
             data.entries.RemoveRange(maxEntries, data.entries.Count - maxEntries);
@@ -229,29 +231,25 @@ public class Leaderboard : MonoBehaviour
     private void SaveLeaderboard()
     {
         string json = JsonUtility.ToJson(data);
-        PlayerPrefs.SetString("Leaderboard", json);
+        PlayerPrefs.SetString(LeaderboardKey, json);            // USE key
         PlayerPrefs.Save();
     }
 
     private void LoadLeaderboard()
     {
-        if (PlayerPrefs.HasKey("Leaderboard"))
+        if (PlayerPrefs.HasKey(LeaderboardKey))
         {
-            string json = PlayerPrefs.GetString("Leaderboard");
+            string json = PlayerPrefs.GetString(LeaderboardKey);
             data = JsonUtility.FromJson<LeaderboardData>(json);
             data.entries.RemoveAll(e => e.zombiesKilled <= 0);
-
-            if (infiniteMode)
-                data.entries.Sort((a, b) => b.score.CompareTo(a.score));
-            else
-                data.entries.Sort((a, b) => a.rawTime.CompareTo(b.rawTime));
+            data.entries.Sort((a, b) => b.score.CompareTo(a.score)); // CHANGE: always sort by score
         }
     }
 
     public void ClearLeaderboard()
     {
         data.entries.Clear();
-        PlayerPrefs.DeleteKey("Leaderboard");
+        PlayerPrefs.DeleteKey(LeaderboardKey);                  // USE key
         UpdateDisplay();
     }
 }

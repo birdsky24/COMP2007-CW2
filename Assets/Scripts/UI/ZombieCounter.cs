@@ -106,6 +106,12 @@ public class ZombieCounter : MonoBehaviour
         UpdateDisplay();
     }
 
+    public void AddPickupScore(int amount)
+    {
+        score += amount;
+        UpdateDisplay();
+    }
+
     private void ShowKillFeedback(int multiKillCount, bool isThrow, bool isBig, int earned, bool isStomp = false)
     {
         if (ScorePopup.Instance == null) return;
@@ -187,8 +193,11 @@ public class ZombieCounter : MonoBehaviour
         if (!infiniteMode && zombieCount <= 0)
         {
             if (gameTimer != null)
-                score += Mathf.RoundToInt((600f - gameTimer.ElapsedTime));
-
+            {
+                // higher time bonus — reward finishing quickly
+                float timeBonus = Mathf.Max(0, 600f - gameTimer.ElapsedTime) * 10f; // ADD THIS: 10x time value
+                score += Mathf.RoundToInt(timeBonus);
+            }
             gameTimer?.Stop();
             StartCoroutine(ShowWinScreenDelay());
         }
