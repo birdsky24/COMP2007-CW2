@@ -1,5 +1,8 @@
 # COMP2007-CW2
 
+My game's itch page
+https://birdsky24.itch.io/zombarrel
+
 Free Assets Used:
 
 Background Image for main menu
