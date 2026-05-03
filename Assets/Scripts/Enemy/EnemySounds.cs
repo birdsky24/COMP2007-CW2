@@ -64,7 +64,12 @@ public class EnemySounds : MonoBehaviour
         //Debug.Log("Distance to player: " + distanceToPlayer);
 
         if (distanceToPlayer <= 2f)
-            playerHealth.TakeDamage();
+        {
+            if (enemy.isBigZombie)
+                playerHealth.TakeDamage(40);                    // ADD THIS: double damage for big zombie
+            else
+                playerHealth.TakeDamage(20);
+        }
     }
 
     public void DealDamage40()
@@ -74,7 +79,12 @@ public class EnemySounds : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
         if (distanceToPlayer <= 2f)
-            playerHealth.TakeDamage40();
+        {
+            if (enemy.isBigZombie)
+                playerHealth.TakeDamage(80);                    // ADD THIS: double damage for big zombie
+            else
+                playerHealth.TakeDamage(40);
+        }
     }
 
     public void DealDamage60()
@@ -82,10 +92,15 @@ public class EnemySounds : MonoBehaviour
         if (player == null || playerHealth == null) return;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-       
+
 
         if (distanceToPlayer <= 3f)
-            playerHealth.TakeDamage60();
+        {
+            if (enemy.isBigZombie)
+                playerHealth.TakeDamage(120);                    // ADD THIS: double damage for big zombie
+            else
+                playerHealth.TakeDamage(60);
+        }
     }
 
     public void roar()

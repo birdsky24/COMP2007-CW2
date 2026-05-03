@@ -75,38 +75,6 @@ public class HealthBarScript : MonoBehaviour
             paintSplatter.StopBleeding();
     }
 
-    // Take 40 damage
-    public void TakeDamage40()
-    {
-        currHealth -= 40;
-        PlaySound(hitSound);
-        if (playerEffects != null)
-            playerEffects.OnDamage();
-        if (paintSplatter != null)
-            paintSplatter.SplatterOnHit(playerTransform.position); // USE playerTransform
-
-        if (currHealth <= 35 && currHealth > 0)             // ADD THIS
-            paintSplatter.StartBleeding();
-        else
-            paintSplatter.StopBleeding();
-    }
-
-    // Take 60 damage
-    public void TakeDamage60()
-    {
-        currHealth -= 60;
-        PlaySound(hitSound);
-        if (playerEffects != null)
-            playerEffects.OnDamage();
-        if (paintSplatter != null)
-            paintSplatter.SplatterOnHit(playerTransform.position); // USE playerTransform
-
-        if (currHealth <= 35 && currHealth > 0)             // ADD THIS
-            paintSplatter.StartBleeding();
-        else
-            paintSplatter.StopBleeding();
-    }
-
     // Heal 30 health
     public void AddHealth()
     {

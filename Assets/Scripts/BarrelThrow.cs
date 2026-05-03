@@ -47,26 +47,28 @@ public class BarrelThrow : MonoBehaviour
     {
         if (throwBarrelPrefabs.Length == 0) return;
 
-        // pick random barrel prefab
         GameObject randomPrefab = throwBarrelPrefabs[Random.Range(0, throwBarrelPrefabs.Length)];
 
-        // spawn at camera position
-        GameObject thrown = Instantiate(randomPrefab, cam.transform.position + cam.transform.forward, Quaternion.identity);
+        // spawn further forward so it doesn't clip into nearby surfaces
+        Vector3 spawnPos = cam.transform.position + cam.transform.forward * 1.5f;
+        GameObject thrown = Instantiate(randomPrefab, spawnPos, Quaternion.identity);
 
-        // add rigidbody for physics
         Rigidbody rb = thrown.GetComponent<Rigidbody>();
         if (rb == null)
             rb = thrown.AddComponent<Rigidbody>();
 
-        // add throw component to handle damage and placement
+        // prevent barrel clipping through player collider on spawn
+        Collider barrelCol = thrown.GetComponent<Collider>();
+        Collider playerCol = GetComponent<Collider>();
+        if (barrelCol != null && playerCol != null)
+            Physics.IgnoreCollision(barrelCol, playerCol);
+
         ThrownBarrel thrownBarrel = thrown.AddComponent<ThrownBarrel>();
         thrownBarrel.damage = 80;
 
-        // throw in camera direction with upward arc
         rb.AddForce(cam.transform.forward * throwForce + Vector3.up * throwUpwardForce, ForceMode.Impulse);
-        rb.AddTorque(Random.insideUnitSphere * 5f, ForceMode.Impulse); // random spin
+        rb.AddTorque(Random.insideUnitSphere * 5f, ForceMode.Impulse);
 
-        // decrement counter
         barrelCounter.Decrement();
     }
 

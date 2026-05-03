@@ -19,7 +19,6 @@ public class Enemy : MonoBehaviour
     public Animator Animator { get => animator; }
     public Vector3 LastKnowPos { get => lastKnowPos; set => lastKnowPos = value; }
 
-    public bool killedByThrow = false;
     public Path path;
     public float sightDistance = 20f;
     public float fieldOfView = 85f;
@@ -32,6 +31,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private GameObject[] barrelDropPrefabs;
     private PaintSplatter paintSplatter;
     private Transform pickupsParent;
+    public bool isBigZombie = false;                            // ADD THIS
+    public ZombieCounter.AttackType lastHitType = ZombieCounter.AttackType.Regular;
 
     private ZombieCounter zombieCounter;
 
@@ -60,6 +61,18 @@ public class Enemy : MonoBehaviour
             pickupsParent = new GameObject("Pickups").transform;
         zombieCounter = FindObjectOfType<ZombieCounter>();
         StartCoroutine(IncreaseDropRate());
+
+        Collider col = GetComponent<Collider>();
+        if (col != null)
+        {
+            PhysicMaterial slippery = new PhysicMaterial("EnemySlippery");
+            slippery.dynamicFriction = 0f;
+            slippery.staticFriction = 0f;
+            slippery.bounciness = 0f;
+            slippery.frictionCombine = PhysicMaterialCombine.Minimum;
+            slippery.bounceCombine = PhysicMaterialCombine.Minimum;
+            col.material = slippery;
+        }
     }
 
     private IEnumerator IncreaseDropRate()
@@ -87,14 +100,17 @@ public class Enemy : MonoBehaviour
         if (currHealth <= 0) return;
         if (stateMachine.activeState is DeathState) return;
 
-        if (fromThrow) killedByThrow = true;                    // ADD THIS
+        if (fromThrow)
+            lastHitType = ZombieCounter.AttackType.Throw;
+        else
+            lastHitType = ZombieCounter.AttackType.Regular;
 
         currHealth -= damage;
 
         if (paintSplatter != null)
             paintSplatter.SplatterOnHit(transform.position);
 
-        if (currHealth <= 35 && currHealth > 0)             // ADD THIS
+        if (currHealth <= 35 && currHealth > 0)
             paintSplatter.StartBleeding();
         else
             paintSplatter.StopBleeding();

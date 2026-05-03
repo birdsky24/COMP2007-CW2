@@ -4,24 +4,36 @@ using System.Collections;
 public class ZombieSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject[] zombiePrefabs;
-    [SerializeField] private Transform[] spawnPoints;
-    [SerializeField] private Path[] paths;                  // ADD THIS: drag scene paths here
+    [SerializeField] private GameObject[] bigZombiePrefabs;
+    [SerializeField] private Path[] paths;
     [SerializeField] private float initialSpawnInterval = 5f;
     [SerializeField] private float minimumSpawnInterval = 1f;
     [SerializeField] private float spawnIntervalDecrease = 0.1f;
     [SerializeField] private int initialMaxZombies = 10;
     [SerializeField] private int maxZombiesIncrease = 2;
     [SerializeField] private float difficultyIncreaseInterval = 30f;
+    [SerializeField] private float spawnRadius = 50f;
+    [SerializeField] private LayerMask terrainMask;
+    [SerializeField] private LayerMask obstacleMask;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip spawnSound;
 
     private float currentSpawnInterval;
     private int currentMaxZombies;
     private ZombieCounter zombieCounter;
+    private Transform enemiesParent;
 
     void Start()
     {
         zombieCounter = FindObjectOfType<ZombieCounter>();
         currentSpawnInterval = initialSpawnInterval;
         currentMaxZombies = initialMaxZombies;
+
+        GameObject enemiesObject = GameObject.Find("Enemy&Path");
+        if (enemiesObject != null)
+            enemiesParent = enemiesObject.transform;
+        else
+            enemiesParent = new GameObject("Enemy&Path").transform;
 
         StartCoroutine(SpawnLoop());
         StartCoroutine(IncreaseDifficulty());
@@ -35,7 +47,7 @@ public class ZombieSpawner : MonoBehaviour
 
             int currentZombies = FindObjectsOfType<Enemy>().Length;
             if (currentZombies < currentMaxZombies)
-                SpawnZombie();
+                TrySpawnZombie();
         }
     }
 
@@ -50,19 +62,72 @@ public class ZombieSpawner : MonoBehaviour
         }
     }
 
-    private void SpawnZombie()
+    private void TrySpawnZombie()
     {
-        if (zombiePrefabs.Length == 0 || spawnPoints.Length == 0) return;
+        for (int attempt = 0; attempt < 10; attempt++)
+        {
+            Vector2 randomCircle = Random.insideUnitCircle * spawnRadius;
+            Vector3 rayOrigin = new Vector3(
+                transform.position.x + randomCircle.x,
+                transform.position.y + 50f,
+                transform.position.z + randomCircle.y);
 
-        Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-        GameObject randomZombie = zombiePrefabs[Random.Range(0, zombiePrefabs.Length)];
+            Ray ray = new Ray(rayOrigin, Vector3.down);
+            RaycastHit hit;
 
-        GameObject zombie = Instantiate(randomZombie, spawnPoint.position, spawnPoint.rotation);
+            if (Physics.Raycast(ray, out hit, 100f, terrainMask))
+            {
+                Vector3 spawnPoint = hit.point + Vector3.up * 0.1f;
 
-        // assign a random scene path to the spawned zombie    // ADD THIS
-        Enemy enemy = zombie.GetComponent<Enemy>();
-        if (enemy != null && paths.Length > 0)
-            enemy.path = paths[Random.Range(0, paths.Length)];
+                if (!Physics.CheckSphere(spawnPoint, 1f, obstacleMask))
+                {
+                    SpawnZombie(spawnPoint);
+                    return;
+                }
+            }
+        }
+        Debug.Log("Could not find valid zombie spawn point after 10 attempts");
+    }
+
+    private void SpawnZombie(Vector3 position)
+    {
+        if (zombiePrefabs.Length == 0) return;
+
+        GameObject zombie;
+
+        if (bigZombiePrefabs.Length > 0 && Random.value <= 0.2f)
+        {
+            zombie = Instantiate(
+                bigZombiePrefabs[Random.Range(0, bigZombiePrefabs.Length)],
+                position, Quaternion.identity);
+
+            Enemy enemy = zombie.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                enemy.isBigZombie = true;
+                enemy.maxHealth = 300;
+                enemy.currHealth = 300;
+            }
+        }
+        else
+        {
+            zombie = Instantiate(
+                zombiePrefabs[Random.Range(0, zombiePrefabs.Length)],
+                position, Quaternion.identity);
+        }
+
+        Enemy spawnedEnemy = zombie.GetComponent<Enemy>();
+        if (spawnedEnemy != null && paths.Length > 0)
+            spawnedEnemy.path = paths[Random.Range(0, paths.Length)];
+
+        if (enemiesParent != null)
+            zombie.transform.SetParent(enemiesParent);
+
+        if (spawnSound != null && audioSource != null)
+        {
+            audioSource.transform.position = position;
+            audioSource.PlayOneShot(spawnSound);
+        }
 
         if (zombieCounter != null)
             zombieCounter.OnZombieSpawned();

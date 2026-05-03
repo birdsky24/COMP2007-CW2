@@ -8,6 +8,10 @@ public class SettingsMenu : MonoBehaviour
     private GameObject previousScreen;
     [SerializeField] private TextMeshProUGUI controlsText;
     [SerializeField] private Slider volumeSlider;
+    [SerializeField] private Slider sensitivitySlider;
+    [SerializeField] private Slider paintSlider;// ADD THIS
+
+    public static float MouseSensitivity { get; private set; } = 1f;
 
     void Awake()
     {
@@ -19,6 +23,15 @@ public class SettingsMenu : MonoBehaviour
         if (controlsText != null)
             controlsText.text = GetControlsText();
 
+        if (paintSlider != null)
+        {
+            paintSlider.minValue = 0f;
+            paintSlider.maxValue = 5f;
+            paintSlider.value = PlayerPrefs.GetFloat("PaintAmount", 1f);
+            PaintSplatter.SplatterMultiplier = paintSlider.value;
+            paintSlider.onValueChanged.AddListener(OnPaintChanged);
+        }
+
         if (volumeSlider != null)
         {
             volumeSlider.minValue = 0f;
@@ -27,12 +40,35 @@ public class SettingsMenu : MonoBehaviour
             volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
             AudioListener.volume = volumeSlider.value;      // apply on start
         }
+
+        if (sensitivitySlider != null)                      // ADD THIS
+        {
+            sensitivitySlider.minValue = 0.1f;
+            sensitivitySlider.maxValue = 5f;
+            sensitivitySlider.value = PlayerPrefs.GetFloat("Sensitivity", 1f);
+            MouseSensitivity = sensitivitySlider.value;
+            sensitivitySlider.onValueChanged.AddListener(OnSensitivityChanged);
+        }
     }
 
     private void OnVolumeChanged(float value)
     {
         AudioListener.volume = value;                       // affects all audio in scene
         PlayerPrefs.SetFloat("Volume", value);              // save setting
+        PlayerPrefs.Save();
+    }
+
+    private void OnPaintChanged(float value)
+    {
+        PaintSplatter.SplatterMultiplier = value;
+        PlayerPrefs.SetFloat("PaintAmount", value);
+        PlayerPrefs.Save();
+    }
+
+    private void OnSensitivityChanged(float value)         // ADD THIS
+    {
+        MouseSensitivity = value;
+        PlayerPrefs.SetFloat("Sensitivity", value);
         PlayerPrefs.Save();
     }
 

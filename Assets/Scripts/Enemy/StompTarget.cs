@@ -2,32 +2,44 @@ using UnityEngine;
 
 public class StompTarget : MonoBehaviour
 {
-    [SerializeField] private float playerBounceForce = 8f;
     private Enemy enemy;
 
     void Start()
     {
         enemy = GetComponentInParent<Enemy>();
+
+        // make stomp collider slippery
+        Collider col = GetComponent<Collider>();
+        if (col != null)
+        {
+            PhysicMaterial slippery = new PhysicMaterial();
+            slippery.dynamicFriction = 0f;
+            slippery.staticFriction = 0f;
+            slippery.bounciness = 0f;
+            slippery.frictionCombine = PhysicMaterialCombine.Minimum;
+            col.material = slippery;
+        }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (!other.CompareTag("Player")) return;
 
-        enemy.TakeDamage(20, false);
+        PlayerMotor player = other.GetComponent<PlayerMotor>();
+        if (player == null) return;
 
-        // launch player in their facing direction
-        PlayerMotor playerMotor = other.GetComponent<PlayerMotor>();
-        if (playerMotor != null)
-            playerMotor.LaunchPlayer(playerBounceForce);
+        if (player.GetVelocityY() < 0)
+            player.currentStompTarget = enemy;              // only set target, never touch canStomp
+    }
 
-        // paint splatter
-        PaintSplatter paintSplatter = enemy.GetComponent<PaintSplatter>();
-        if (paintSplatter != null)
-        {
-            paintSplatter.SplatterOnHit(enemy.transform.position);
-            if (enemy.currHealth <= 35 && enemy.currHealth > 0)
-                paintSplatter.StartBleeding();
-        }
+    private void OnTriggerExit(Collider other)
+    {
+        if (!other.CompareTag("Player")) return;
+
+        PlayerMotor player = other.GetComponent<PlayerMotor>();
+        if (player == null) return;
+
+        if (player.currentStompTarget == enemy)
+            player.currentStompTarget = null;              // only clear target, never touch canStomp
     }
 }

@@ -17,6 +17,9 @@ public class BarrelHitbox : MonoBehaviour
     [SerializeField] private AudioClip barrelBreakSound;
     [SerializeField] private GameObject heldBarrel;
 
+    private System.Collections.Generic.HashSet<Enemy> hitEnemiesThisSwing = new System.Collections.Generic.HashSet<Enemy>();
+    private bool durabilityConsumedThisSwing = false;
+
     public bool IsSwinging { get; private set; } = false;
 
     void Start()
@@ -36,15 +39,24 @@ public class BarrelHitbox : MonoBehaviour
     public void EnableHitbox()
     {
         if (isBroken) return;
-        if (placementMode != null && placementMode.isActive) return; // don't enable in placement mode
+        if (placementMode != null && placementMode.isActive) return;
+
         IsSwinging = true;
         hitboxCollider.enabled = true;
+
+        // RESET SWING DATA
+        hitEnemiesThisSwing.Clear();
+        durabilityConsumedThisSwing = false;
     }
 
     public void DisableHitbox()
     {
         IsSwinging = false;
         hitboxCollider.enabled = false;
+
+        // safety reset
+        hitEnemiesThisSwing.Clear();
+        durabilityConsumedThisSwing = false;
     }
 
     public void HideBarrel()
@@ -87,16 +99,27 @@ public class BarrelHitbox : MonoBehaviour
         if (enemy != null)
         {
             if (enemy.currHealth <= 0) return;
+
+            // prevent hitting same enemy multiple times in one swing
+            if (hitEnemiesThisSwing.Contains(enemy)) return;
+            hitEnemiesThisSwing.Add(enemy);
+
             enemy.TakeDamage(damage, false);
             PlaySound(enemyHitSound);
-            durability--;
 
-            BarrelCounter counter = GetBarrelCounter();
-            if (counter != null)
-                counter.UpdateDurabilityDisplay(durability);   // update durability display
+            // only reduce durability ONCE per swing
+            if (!durabilityConsumedThisSwing)
+            {
+                durabilityConsumedThisSwing = true;
+                durability--;
 
-            if (durability <= 0)
-                BreakBarrel();
+                BarrelCounter counter = GetBarrelCounter();
+                if (counter != null)
+                    counter.UpdateDurabilityDisplay(durability);
+
+                if (durability <= 0)
+                    BreakBarrel();
+            }
 
             return;
         }

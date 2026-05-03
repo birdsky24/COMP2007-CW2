@@ -136,18 +136,34 @@ public class ThrownBarrel : MonoBehaviour
         if (rb != null)
         {
             rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;             // stop rolling
+            rb.angularVelocity = Vector3.zero;
             rb.isKinematic = true;
         }
 
-        if (GetComponent<Barrel>() == null)
+        // re-enable player collision before destroying this component
+        if (player != null)
         {
-            Barrel barrel = gameObject.AddComponent<Barrel>();
-            barrel.promptMessage = "Pick up Barrel";
+            Collider[] playerColliders = player.GetComponentsInChildren<Collider>();
+            Collider myCollider = GetComponent<Collider>();
+            if (myCollider != null)
+            {
+                foreach (Collider col in playerColliders)
+                    Physics.IgnoreCollision(myCollider, col, false); // false = re-enable
+            }
         }
 
-        if (GetComponent<Collider>() == null)
-            gameObject.AddComponent<BoxCollider>();
+        // reset physics material so landed barrel is solid
+        Collider barrelCol = GetComponent<Collider>();
+        if (barrelCol != null)
+        {
+            barrelCol.material = null;
+            barrelCol.isTrigger = false;
+        }
+
+        // disable the large trigger sphere collider
+        SphereCollider[] spheres = GetComponents<SphereCollider>();
+        foreach (SphereCollider s in spheres)
+            Destroy(s);
 
         if (pickupsParent != null)
             transform.SetParent(pickupsParent);

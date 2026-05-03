@@ -4,8 +4,6 @@ public class PlayerLook : MonoBehaviour
 {
     public Camera cam;
     private float xRotation = 0f;
-    public float xSensitivity = 30f;
-    public float ySensitivity = 30f;
     private float lockTimer = 0f;
     private float lockDuration = 0.1f;
 
@@ -20,16 +18,18 @@ public class PlayerLook : MonoBehaviour
         if (lockTimer < lockDuration)
         {
             lockTimer += Time.deltaTime;
-            return;                         // ignore input until lock duration is over
+            return;
         }
+
+        float sensitivity = SettingsMenu.MouseSensitivity * 30f; // 30f is your base sensitivity
 
         float mouseX = input.x;
         float mouseY = input.y;
 
-        xRotation -= (mouseY * Time.deltaTime) * ySensitivity;
+        xRotation -= (mouseY * Time.deltaTime) * sensitivity;
         xRotation = Mathf.Clamp(xRotation, -80f, 80f);
 
         cam.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
-        transform.Rotate(Vector3.up * (mouseX * Time.deltaTime) * xSensitivity);
+        transform.Rotate(Vector3.up * (mouseX * Time.deltaTime) * sensitivity);
     }
 }

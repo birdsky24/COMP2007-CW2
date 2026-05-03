@@ -59,9 +59,12 @@ public class AttackState : BaseState
             // rotate on Y axis only — prevents tilting when player jumps
             Vector3 direction = (enemy.Player.transform.position - enemy.transform.position).normalized;
             direction.y = 0f;                               // lock Y axis
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            enemy.transform.rotation = Quaternion.RotateTowards(
-                enemy.transform.rotation, targetRotation, 360f * Time.deltaTime);
+            if (direction != Vector3.zero)                              // ADD THIS: prevent zero vector error
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                enemy.transform.rotation = Quaternion.RotateTowards(
+                    enemy.transform.rotation, targetRotation, 360f * Time.deltaTime);
+            }
 
             float distanceToPlayer = Vector3.Distance(
                 enemy.transform.position, enemy.Player.transform.position);

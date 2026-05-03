@@ -15,6 +15,7 @@ public class PaintSplatter : MonoBehaviour
     private Transform paintParent;
     private Queue<GameObject> allDecals = new Queue<GameObject>(); // REMOVE static keyword
     private Coroutine bleedCoroutine;
+    public static float SplatterMultiplier { get; set; } = 1f;
 
     void Start()
     {
@@ -69,7 +70,9 @@ public class PaintSplatter : MonoBehaviour
     {
         if (paintDecalPrefabs.Length == 0) return;
 
-        for (int i = 0; i < count; i++)
+        int adjustedCount = Mathf.Max(1, Mathf.RoundToInt(count * SplatterMultiplier)); // ADD THIS
+
+        for (int i = 0; i < adjustedCount; i++)
         {
             Vector2 randomCircle = Random.insideUnitCircle * radius;
             Vector3 rayOrigin = new Vector3(
