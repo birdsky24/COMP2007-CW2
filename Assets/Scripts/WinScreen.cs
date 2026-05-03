@@ -37,6 +37,7 @@ public class WinScreen : MonoBehaviour
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        PaintSplatter.BleedingPaused = true;
 
         resultText.text = "VICTORY\n" +
                           "Zombies killed: " + zombiesKilled + "\n" +

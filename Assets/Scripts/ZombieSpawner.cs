@@ -141,9 +141,15 @@ public class ZombieSpawner : MonoBehaviour
 
     private IEnumerator SetAttackStateNextFrame(Enemy enemy)
     {
-        yield return null;                                      // wait one frame for Enemy.Start to run
+        yield return new WaitForSeconds(0.2f); // CHANGE: was yield return null, builds need more time
         if (enemy != null && enemy.currHealth > 0)
         {
+            // reset animator fully before entering attack
+            enemy.Animator.SetBool("walk", false);
+            enemy.Animator.SetBool("idle2", false);
+            enemy.Animator.SetBool("run", false);
+            enemy.Animator.ResetTrigger("roar");
+
             StateMachine sm = enemy.GetComponent<StateMachine>();
             if (sm != null)
                 sm.ChangeState(new AttackState());

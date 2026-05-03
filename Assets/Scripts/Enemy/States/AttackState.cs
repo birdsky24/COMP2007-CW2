@@ -12,10 +12,17 @@ public class AttackState : BaseState
         playerHealth = GameObject.FindObjectOfType<HealthBarScript>();
         enemy.fieldOfView = 180f;
         enemy.Agent.updateRotation = false;
-        enemy.Animator.SetTrigger("roar");
+        enemy.Agent.updateUpAxis = false;
         enemy.Agent.isStopped = true;
         hasRoared = false;
         roarTimer = 0f;
+
+        // ADD THIS: clear patrol/search animation states before roar
+        enemy.Animator.SetBool("walk", false);
+        enemy.Animator.SetBool("idle2", false);
+        enemy.Animator.SetBool("run", false);
+        enemy.Animator.ResetTrigger("roar");
+        enemy.Animator.SetTrigger("roar");
     }
 
     public override void Exit()
@@ -35,18 +42,16 @@ public class AttackState : BaseState
         if (!hasRoared)
         {
             roarTimer += Time.deltaTime;
-            AnimatorStateInfo stateInfo = enemy.Animator.GetCurrentAnimatorStateInfo(0);
 
             float distanceToPlayer = Vector3.Distance(
                 enemy.transform.position, enemy.Player.transform.position);
 
-            if ((stateInfo.IsName("roar") && stateInfo.normalizedTime >= 1f)
-                || roarTimer >= roarTimeout
-                || distanceToPlayer < 1.5f)
+            // REMOVE stateInfo.IsName check entirely
+            if (roarTimer >= roarTimeout || distanceToPlayer < 1.5f)
             {
                 hasRoared = true;
                 enemy.Agent.isStopped = false;
-                enemy.Animator.SetBool("run", true);                    // ADD THIS: trigger transition out of roar
+                enemy.Animator.SetBool("run", true);
                 enemy.Agent.SetDestination(enemy.Player.transform.position);
             }
             else return;

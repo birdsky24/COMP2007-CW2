@@ -33,6 +33,7 @@ public class DeathScreen : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         GameUI.Instance?.HideHUD();
+        PaintSplatter.BleedingPaused = true;
 
         if (statsText != null)
             statsText.text = "FAILURE\n" +

@@ -16,6 +16,7 @@ public class PaintSplatter : MonoBehaviour
     private Queue<GameObject> allDecals = new Queue<GameObject>(); // REMOVE static keyword
     private Coroutine bleedCoroutine;
     public static float SplatterMultiplier { get; set; } = 1f;
+    public static bool BleedingPaused { get; set; } = false;
 
     void Start()
     {
@@ -62,7 +63,8 @@ public class PaintSplatter : MonoBehaviour
         while (true)
         {
             yield return new WaitForSecondsRealtime(bleedInterval);
-            Splatter(transform.position, 1, 0.3f);
+            if (!BleedingPaused)                               // ADD THIS: skip if paused
+                Splatter(transform.position, 1, 0.3f);
         }
     }
 

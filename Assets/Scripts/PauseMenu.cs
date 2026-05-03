@@ -46,6 +46,7 @@ public class PauseMenu : MonoBehaviour
         isPaused = false;
         gameTimer?.Resume();
         GameUI.Instance?.ShowPartHUD();
+        PaintSplatter.BleedingPaused = false;
     }
 
     private void Pause()
@@ -57,6 +58,7 @@ public class PauseMenu : MonoBehaviour
         isPaused = true;
         gameTimer?.Pause();
         GameUI.Instance?.HidePartHUD();
+        PaintSplatter.BleedingPaused = true;
 
         if (leaderboardText != null)
             leaderboardText.text = GetLeaderboard();
