@@ -189,17 +189,28 @@ public class Enemy : MonoBehaviour
                             if (stateMachine.activeState is AttackState)
                                 return true;
 
-                            // in patrol or search — check if player is crouching
+                            // in patrol or search — crouching only helps if something is blocking
                             PlayerMotor playerMotor = player.GetComponent<PlayerMotor>();
                             if (playerMotor != null && playerMotor.crouching)
-                                return false;   // can't see crouching player in non-attack states
+                            {
+                                // check if anything is between enemy and player
+                                Ray crouchRay = new Ray(transform.position + (Vector3.up * eyeHeight), targetDirection);
+                                RaycastHit crouchHit;
+                                if (Physics.Raycast(crouchRay, out crouchHit, sightDistance))
+                                {
+                                    // if raycast hits something before the player they're hidden
+                                    if (crouchHit.transform.gameObject != player)
+                                        return false;           // something is blocking line of sight
+                                }
+                                // nothing blocking — crouching alone doesn't hide the player
+                                return true;
+                            }
 
                             return true;
                         }
                         else
                         {
-                            // raycast hit something else (e.g. a barrel) before reaching player
-                            return false;       // line of sight blocked
+                            return false;                       // line of sight blocked
                         }
                     }
                     Debug.DrawRay(ray.origin, ray.direction * sightDistance);

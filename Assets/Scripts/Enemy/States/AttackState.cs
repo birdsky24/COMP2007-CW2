@@ -10,7 +10,7 @@ public class AttackState : BaseState
     public override void Enter()
     {
         playerHealth = GameObject.FindObjectOfType<HealthBarScript>();
-        enemy.fieldOfView = 180f;
+        enemy.fieldOfView = 360f;
         enemy.Agent.updateRotation = false;
         enemy.Agent.updateUpAxis = false;
         enemy.Agent.isStopped = true;
@@ -102,7 +102,20 @@ public class AttackState : BaseState
         {
             losePlayerTimer += Time.deltaTime;
             enemy.Animator.SetBool("run", false);
-            if (losePlayerTimer > 3)
+
+            // ADD THIS: keep chasing if player is close even if not visible
+            float distanceToPlayer = Vector3.Distance(
+                enemy.transform.position, enemy.Player.transform.position);
+            if (distanceToPlayer < enemy.sightDistance)
+            {
+                losePlayerTimer = 0;                                // reset timer if player nearby
+                enemy.Agent.isStopped = false;
+                enemy.Agent.speed = 14f;
+                enemy.Animator.SetBool("run", true);
+                enemy.Agent.SetDestination(enemy.Player.transform.position);
+            }
+
+            if (losePlayerTimer > 8)                               // CHANGE: 3 to 8 seconds
                 stateMachine.ChangeState(new SearchState());
         }
     }

@@ -12,6 +12,7 @@ public class ThrownBarrel : MonoBehaviour
     private HealthBarScript playerHealth;
     [SerializeField] private AudioClip bounceSound;
     private AudioSource audioSource;
+    private UnityEngine.AI.NavMeshObstacle navMeshObstacle;
 
     void Start()
     {
@@ -22,6 +23,10 @@ public class ThrownBarrel : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
             audioSource = gameObject.AddComponent<AudioSource>();
+
+        navMeshObstacle = GetComponent<UnityEngine.AI.NavMeshObstacle>();
+        if (navMeshObstacle != null)
+            navMeshObstacle.enabled = false;
 
         GameObject pickups = GameObject.Find("Pickups");
         if (pickups != null)
@@ -154,6 +159,13 @@ public class ThrownBarrel : MonoBehaviour
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             rb.isKinematic = true;
+        }
+
+        // ADD THIS: enable nav mesh obstacle when landed
+        if (navMeshObstacle != null)
+        {
+            navMeshObstacle.enabled = true;
+            navMeshObstacle.carving = true;
         }
 
         // re-enable player collision before destroying this component

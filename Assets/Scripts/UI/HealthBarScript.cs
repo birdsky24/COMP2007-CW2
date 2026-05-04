@@ -79,5 +79,7 @@ public class HealthBarScript : MonoBehaviour
     public void AddHealth()
     {
         currHealth += 30;
+        if (currHealth >= 35)
+            paintSplatter.StopBleeding();
     }
 }
