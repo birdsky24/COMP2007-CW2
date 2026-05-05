@@ -64,7 +64,7 @@ public class ZombieSpawner : MonoBehaviour
 
     private void TrySpawnZombie()
     {
-        for (int attempt = 0; attempt < 10; attempt++)
+        for (int attempt = 0; attempt < 20; attempt++) // INCREASE: 10 to 20 attempts
         {
             Vector2 randomCircle = Random.insideUnitCircle * spawnRadius;
             Vector3 rayOrigin = new Vector3(
@@ -75,7 +75,7 @@ public class ZombieSpawner : MonoBehaviour
             Ray ray = new Ray(rayOrigin, Vector3.down);
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, 100f, terrainMask))
+            if (Physics.Raycast(ray, out hit, 200f, terrainMask)) // INCREASE: 100f to 200f
             {
                 Vector3 spawnPoint = hit.point + Vector3.up * 0.1f;
 
@@ -86,7 +86,7 @@ public class ZombieSpawner : MonoBehaviour
                 }
             }
         }
-        Debug.Log("Could not find valid zombie spawn point after 10 attempts");
+        Debug.Log("Could not find valid zombie spawn point after 20 attempts");
     }
 
     private void SpawnZombie(Vector3 position)

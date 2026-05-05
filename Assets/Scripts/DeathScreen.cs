@@ -96,6 +96,26 @@ public class DeathScreen : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
+    [SerializeField] private GameObject firstButton;
+
+    void OnEnable()
+    {
+        UnityEngine.EventSystems.EventSystem.current?.SetSelectedGameObject(null);
+        UnityEngine.EventSystems.EventSystem.current?.SetSelectedGameObject(firstButton);
+    }
+
+    public void GoToNormal()
+    {
+        Time.timeScale = 1f;
+        StartCoroutine(LoadNormalDelay());
+    }
+
+    private IEnumerator LoadNormalDelay()
+    {
+        yield return new WaitForSecondsRealtime(0.2f);
+        SceneManager.LoadScene(1);
+    }
+
     private IEnumerator LoadWithDelay3()
     {
         yield return new WaitForSecondsRealtime(0.2f);

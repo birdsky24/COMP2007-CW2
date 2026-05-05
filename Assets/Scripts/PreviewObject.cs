@@ -1,4 +1,5 @@
 using UnityEngine;
+
 public class PreviewObject : MonoBehaviour
 {
     [SerializeField] private Renderer previewRenderer;
@@ -7,21 +8,33 @@ public class PreviewObject : MonoBehaviour
     [SerializeField] private LayerMask ignoreMask;
 
     public bool isValid { get; private set; } = true;
-    private int _overlapCount = 0;
+    private Collider previewCollider;
 
-    private void OnTriggerEnter(Collider other)
+    void Start()
     {
-        if (((1 << other.gameObject.layer) & ignoreMask) != 0) return;
-        _overlapCount++;
-        isValid = false;
-        previewRenderer.material = invalidMaterial;
+        previewCollider = GetComponent<Collider>();
     }
 
-    private void OnTriggerExit(Collider other)
+    void Update()
     {
-        if (((1 << other.gameObject.layer) & ignoreMask) != 0) return;
-        _overlapCount = Mathf.Max(0, _overlapCount - 1);
-        isValid = _overlapCount == 0;
+        if (previewCollider == null) return;
+
+        // check actual live colliders every frame
+        Collider[] overlaps = Physics.OverlapBox(
+            previewCollider.bounds.center,
+            previewCollider.bounds.extents,
+            transform.rotation,
+            ~ignoreMask);
+
+        // filter out self
+        int count = 0;
+        foreach (Collider col in overlaps)
+        {
+            if (col.gameObject != gameObject)
+                count++;
+        }
+
+        isValid = count == 0;
         previewRenderer.material = isValid ? validMaterial : invalidMaterial;
     }
 }

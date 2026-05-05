@@ -7,10 +7,17 @@ public class MainMenu : MonoBehaviour
 {
     public static MainMenu Instance;
     private SettingsMenu settingsMenu;
+    [SerializeField] private GameObject firstButton;
 
     void Start()
     {
         settingsMenu = FindObjectOfType<SettingsMenu>(true);
+    }
+
+    void OnEnable()
+    {
+        UnityEngine.EventSystems.EventSystem.current?.SetSelectedGameObject(null);
+        UnityEngine.EventSystems.EventSystem.current?.SetSelectedGameObject(firstButton);
     }
 
     public void OpenSettings()

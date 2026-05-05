@@ -27,7 +27,16 @@ public class InputManager : MonoBehaviour
         onFoot.Crouch.performed += ctx => motor.Crouch();
         onFoot.Sprint.performed += ctx => motor.Sprint();
         onFoot.TogglePlacement.performed += ctx => placementMode.TogglePlacementMode();
-        onFoot.Menu.performed += ctx => pauseMenu.Toggle();
+        onFoot.Menu.performed += ctx =>
+        {
+            DeathScreen deathScreen = FindObjectOfType<DeathScreen>(true);
+            WinScreen winScreen = FindObjectOfType<WinScreen>(true);
+
+            if (deathScreen != null && deathScreen.gameObject.activeSelf) return;
+            if (winScreen != null && winScreen.gameObject.activeSelf) return;
+
+            pauseMenu.Toggle();
+        };
     }
 
     // Update is called once per frame

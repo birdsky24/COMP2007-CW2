@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 869597924256215448}
   - component: {fileID: 6418861660522186566}
   m_Layer: 6
-  m_Name: RedBarrelLight
+  m_Name: BarrelLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cc1959b1dcebb941a3f764408f2f5f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  promptMessage: Pickup Barrel
+  promptMessage: Pickup
   audioSource: {fileID: 118595416413110805}
   pickupSound: {fileID: 8300000, guid: f9533507181f4b24db5516763c2d22fb, type: 3}
 --- !u!82 &118595416413110805

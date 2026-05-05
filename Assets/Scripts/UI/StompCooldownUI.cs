@@ -20,7 +20,7 @@ public class StompCooldownUI : MonoBehaviour
 
         float progress = playerMotor.GetStompCooldownProgress();
         fillImage.fillAmount = progress;
-        fillImage.color = progress >= 1f ? Color.green : Color.red;
+        fillImage.color = progress >= 1f ? new Color(0x1F / 255f, 0x4A / 255f, 0x35 / 255f) : new Color(0x68 / 255f, 0x1F / 255f, 0x0A / 255f);
 
         if (cooldownText != null)
         {

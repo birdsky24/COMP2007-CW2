@@ -11,7 +11,7 @@ public class ThrowCooldownUI : MonoBehaviour
     void Start()
     {
         barrelThrow = FindObjectOfType<BarrelThrow>();
-        fillImage.fillAmount = 1f;                          // start full
+        fillImage.fillAmount = 1f;
     }
 
     void Update()
@@ -20,7 +20,7 @@ public class ThrowCooldownUI : MonoBehaviour
 
         float cooldownProgress = barrelThrow.GetCooldownProgress();
         fillImage.fillAmount = cooldownProgress;
-        fillImage.color = cooldownProgress >= 1f ? Color.green : Color.red;
+        fillImage.color = cooldownProgress >= 1f ? new Color(0x1F / 255f, 0x4A / 255f, 0x35 / 255f) : new Color(0x68 / 255f, 0x1F / 255f, 0x0A / 255f);
 
         // optional text
         if (cooldownText != null)

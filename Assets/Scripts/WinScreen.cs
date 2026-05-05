@@ -24,6 +24,14 @@ public class WinScreen : MonoBehaviour
         settingsMenu = FindObjectOfType<SettingsMenu>(true);
     }
 
+    [SerializeField] private GameObject firstButton;
+
+    void OnEnable()
+    {
+        UnityEngine.EventSystems.EventSystem.current?.SetSelectedGameObject(null);
+        UnityEngine.EventSystems.EventSystem.current?.SetSelectedGameObject(firstButton);
+    }
+
     public void Show(int zombiesKilled, string time)
     {
         gameObject.SetActive(true);

@@ -95,12 +95,14 @@ public class Enemy : MonoBehaviour
         currentState = stateMachine.activeState.ToString();
     }
 
-    public void TakeDamage(int damage, bool fromThrow = false)
+    public void TakeDamage(int damage, bool fromThrow = false, bool fromStomp = false)
     {
         if (currHealth <= 0) return;
         if (stateMachine.activeState is DeathState) return;
 
-        if (fromThrow)
+        if (fromStomp)
+            lastHitType = ZombieCounter.AttackType.Stomp;
+        else if (fromThrow)
             lastHitType = ZombieCounter.AttackType.Throw;
         else
             lastHitType = ZombieCounter.AttackType.Regular;

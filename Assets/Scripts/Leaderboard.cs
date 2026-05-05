@@ -51,7 +51,10 @@ public class Leaderboard : MonoBehaviour
         if (nameEntryPanel != null)
             nameEntryPanel.SetActive(false);
         if (nameInputField != null)
+        {
             nameInputField.onValueChanged.AddListener(ForceUppercase);
+            nameInputField.onSubmit.AddListener(_ => ConfirmName());
+        }
     }
 
     public string GetLeaderboardDisplay()

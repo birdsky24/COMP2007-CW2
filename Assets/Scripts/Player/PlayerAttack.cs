@@ -6,19 +6,20 @@ public class PlayerAttack : MonoBehaviour
     private InputManager inputManager;
     private PlacementMode placementMode;
 
+    public static bool AttackBlocked = false; // ADD THIS
+
     void Start()
     {
         inputManager = GetComponent<InputManager>();
-        placementMode = FindObjectOfType<PlacementMode>();  // ADD THIS
+        placementMode = FindObjectOfType<PlacementMode>();
     }
 
     void Update()
     {
-        if (placementMode != null && placementMode.isActive) return;  // ADD THIS: block swing in placement mode
+        if (AttackBlocked) return;
+        if (placementMode != null && placementMode.isActive) return;
 
         if (inputManager.onFoot.Attack.triggered)
-        {
             barrelAnimator.SetTrigger("attack");
-        }
     }
 }

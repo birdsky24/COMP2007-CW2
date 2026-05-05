@@ -39,6 +39,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Resume()
     {
+        PlayerAttack.AttackBlocked = false;
         gameObject.SetActive(false);
         Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.Locked;
@@ -51,6 +52,7 @@ public class PauseMenu : MonoBehaviour
 
     private void Pause()
     {
+        PlayerAttack.AttackBlocked = true;
         gameObject.SetActive(true);
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
@@ -102,6 +104,26 @@ public class PauseMenu : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(0.2f);
         SceneManager.LoadScene(2);
+    }
+
+    [SerializeField] private GameObject firstButton;
+
+    void OnEnable()
+    {
+        UnityEngine.EventSystems.EventSystem.current?.SetSelectedGameObject(null);
+        UnityEngine.EventSystems.EventSystem.current?.SetSelectedGameObject(firstButton);
+    }
+
+    public void GoToNormal()
+    {
+        Time.timeScale = 1f;
+        StartCoroutine(LoadNormalDelay());
+    }
+
+    private IEnumerator LoadNormalDelay()
+    {
+        yield return new WaitForSecondsRealtime(0.2f);
+        SceneManager.LoadScene(1);
     }
 
     public void LoadInfinite()

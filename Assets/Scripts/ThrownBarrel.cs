@@ -121,6 +121,7 @@ public class ThrownBarrel : MonoBehaviour
             bounceCount++;
             damage = Mathf.Max(0, damage - 20);
             ignorePlayer = false;
+            AlertNearbyEnemies();
             return;
         }
 
@@ -128,6 +129,18 @@ public class ThrownBarrel : MonoBehaviour
         bounceCount++;
         damage = Mathf.Max(0, damage - 20);
         ignorePlayer = false;
+        AlertNearbyEnemies();
+    }
+
+    private void AlertNearbyEnemies()
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, 10f);
+        foreach (Collider hit in hits)
+        {
+            Enemy nearbyEnemy = hit.GetComponent<Enemy>();
+            if (nearbyEnemy != null)
+                nearbyEnemy.AlertFromRoar();
+        }
     }
 
     private void OnTriggerEnter(Collider other)

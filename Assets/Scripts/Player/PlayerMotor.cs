@@ -141,7 +141,7 @@ public class PlayerMotor : MonoBehaviour
 
         Enemy enemy = currentStompTarget;
         enemy.lastHitType = ZombieCounter.AttackType.Stomp;
-        enemy.TakeDamage(20, false);
+        enemy.TakeDamage(20, false, true); // fromStomp = true
 
         playerVelocity.y = Mathf.Sqrt(jumpHeight * -3f * gravity);
         stompCooldown = 0.5f;

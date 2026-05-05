@@ -117,7 +117,7 @@ public class ZombieCounter : MonoBehaviour
         if (ScorePopup.Instance == null) return;
 
         string message = "";
-        Color color = Color.white;
+        Color color = new Color(0x67 / 255f, 0x67 / 255f, 0x67 / 255f);
 
         // kill type
         if (isStomp)
@@ -216,7 +216,7 @@ public class ZombieCounter : MonoBehaviour
         multiplierText.text = "Multiplier: x" + killStreakMultiplier.ToString("F2");
 
         float t = Mathf.Clamp01((killStreakMultiplier - 1f) / 3f);
-        multiplierText.color = Color.Lerp(Color.white, Color.red, t);
+        multiplierText.color = Color.Lerp(new Color(0x67 / 255f, 0x67 / 255f, 0x67 / 255f), Color.red, t);
     }
 
     void Update()

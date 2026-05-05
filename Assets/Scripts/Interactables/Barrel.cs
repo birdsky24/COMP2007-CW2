@@ -27,13 +27,12 @@ public class Barrel : Interactable
         if (zombieCounter != null) zombieCounter.AddPickupScore(50); // ADD THIS
 
         if (pickupSound != null && audioSource != null)
+        {
+            audioSource.transform.SetParent(null);
             audioSource.PlayOneShot(pickupSound);
-        StartCoroutine(DestroyAfterSound());
-    }
+            Destroy(audioSource.gameObject, pickupSound.length);
+        }
 
-    private IEnumerator DestroyAfterSound()
-    {
-        yield return new WaitForSeconds(pickupSound != null ? pickupSound.length : 0f);
         Destroy(gameObject);
     }
 }

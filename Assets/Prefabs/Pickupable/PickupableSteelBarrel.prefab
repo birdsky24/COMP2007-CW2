@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 6704104315007161396}
   - component: {fileID: 2078765544778857948}
   m_Layer: 6
-  m_Name: SteelBarrelLight
+  m_Name: BarrelLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cc1959b1dcebb941a3f764408f2f5f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  promptMessage: Pickup Barrel
+  promptMessage: Pickup
   audioSource: {fileID: 8674040596432330717}
   pickupSound: {fileID: 8300000, guid: f9533507181f4b24db5516763c2d22fb, type: 3}
 --- !u!82 &8674040596432330717

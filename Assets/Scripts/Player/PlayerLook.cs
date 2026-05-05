@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerLook : MonoBehaviour
 {
@@ -21,7 +22,12 @@ public class PlayerLook : MonoBehaviour
             return;
         }
 
-        float sensitivity = SettingsMenu.MouseSensitivity * 30f; // 30f is your base sensitivity
+        // pick sensitivity based on active device
+        float sensitivity;
+        if (Gamepad.current != null && Gamepad.current.rightStick.ReadValue().magnitude > 0.01f)
+            sensitivity = SettingsMenu.ControllerSensitivity * 30f;
+        else
+            sensitivity = SettingsMenu.MouseSensitivity * 30f;
 
         float mouseX = input.x;
         float mouseY = input.y;
